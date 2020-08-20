@@ -27,7 +27,7 @@ class MCAgent:
     def save_sample(self, state, reward, done):
         self.samples.append([state, reward, done])
 
-    # for every episode, agent updates q function of visited states
+    # for every episode, agent updates v function of visited states
     def update(self):
         # state name and G for each state as appeared in the episode
         all_states = []
@@ -61,7 +61,7 @@ class MCAgent:
             # take random action
             action = np.random.choice(self.actions)
         else:
-            # take action according to the q function table
+            # take action according to the v function table
             next_state = self.possible_next_state(state)
             action = self.arg_max(next_state)
         return int(action)
