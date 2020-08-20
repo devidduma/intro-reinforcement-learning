@@ -28,6 +28,7 @@ pip install -r requirements.txt
 - [Policy Iteration](./1-grid-world/1-policy-iteration)
 - [Value Iteration](./1-grid-world/2-value-iteration)
 - [Monte Carlo](./1-grid-world/3-monte-carlo)
+- [Temporal Difference](./1-grid-world/4-temporal-difference)
 - [SARSA](1-grid-world/5-sarsa)
 - [Q-Learning](1-grid-world/6-q-learning)
 - [Deep SARSA](1-grid-world/7-deep-sarsa)
