@@ -103,30 +103,3 @@ class MCAgent:
             next_state[3] = self.value_table[str(state)]
 
         return next_state
-
-
-# main loop
-if __name__ == "__main__":
-    env = Env()
-    agent = MCAgent(actions=list(range(env.n_actions)))
-
-    for episode in range(1000):
-        state = env.reset()
-        action = agent.get_action(state)
-
-        while True:
-            env.render()
-
-            # forward to next state. reward is number and done is boolean
-            next_state, reward, done = env.step(action)
-            agent.save_sample(next_state, reward, done)
-
-            # get next action
-            action = agent.get_action(next_state)
-
-            # at the end of each episode, update the v function table
-            if done:
-                print("episode : ", episode)
-                agent.update()
-                agent.samples.clear()
-                break
