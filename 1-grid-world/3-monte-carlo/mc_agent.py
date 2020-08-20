@@ -38,53 +38,20 @@ class MCAgent:
             all_states.append([state_name, G])
         all_states.reverse()
 
-        # use either first visit, every visit or incremental MC
-        self.first_visit_mc(all_states)
+        return all_states
 
-    def first_visit_mc(self, all_states):
-        visit_state = []
-        for state in all_states:
-            if state[0] not in visit_state:
-                visit_state.append(state[0])
-                self.update_global_visit_state(state[0], state[1])
-        for state in self.visit_state:
-            self.value_table[state.name] = state.V
-
-    def every_visit_mc(self, all_states):
-        for state in all_states:
-                self.update_global_visit_state(state[0], state[1])
-        for state in self.visit_state:
-            self.value_table[state.name] = state.V
-
-    def incremental_mc(self, all_states):
-        for state in all_states:
-            self.update_global_visit_state(state[0], state[1], incremental=True)
-        for state in self.visit_state:
-            self.value_table[state.name] = state.V
-
-    def update_global_visit_state(self, state_name, G_t, incremental = False):
-        if not incremental:
-            updated = False
-            for vs in self.visit_state:
-                if vs.name == state_name:
-                    vs.total_G = vs.total_G + G_t
-                    vs.N = vs.N + 1
-                    vs.V = vs.total_G / vs.N
-                    updated = True
-                    break
-            if not updated:
-                self.visit_state.append(VisitState(name=state_name, total_G=G_t, N=1, V=G_t))
-        else:
-            updated = False
-            for vs in self.visit_state:
-                if vs.name == state_name:
-                    vs.N = vs.N + 1
-                    learning_rate = 0.5 * 1 / vs.N
-                    vs.V = vs.V + learning_rate * (G_t - vs.V)
-                    updated = True
-                    break
-            if not updated:
-                self.visit_state.append(VisitState(name=state_name, total_G=None, N=1, V=G_t))
+    # update visited states for first visit or every visit MC
+    def update_global_visit_state(self, state_name, G_t):
+        updated = False
+        for vs in self.visit_state:
+            if vs.name == state_name:
+                vs.total_G = vs.total_G + G_t
+                vs.N = vs.N + 1
+                vs.V = vs.total_G / vs.N
+                updated = True
+                break
+        if not updated:
+            self.visit_state.append(VisitState(name=state_name, total_G=G_t, N=1, V=G_t))
 
 
     # get action for the state according to the v function table

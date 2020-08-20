@@ -1,0 +1,59 @@
+from mc_agent import MCAgent, VisitState
+from environment import Env
+
+
+class IMCAgent(MCAgent):
+    def __init__(self, actions):
+        super(IMCAgent, self).__init__(actions)
+
+    # for every episode, agent updates q function of visited states
+    def update(self):
+        all_states = super(IMCAgent, self).update()
+        # use either first visit, every visit or incremental MC
+        self.incremental_mc(all_states)
+
+    def incremental_mc(self, all_states):
+        for state in all_states:
+            self.update_global_visit_state(state[0], state[1])
+        for state in self.visit_state:
+            self.value_table[state.name] = state.V
+
+    # redefined update visited states for incremental MC
+    def update_global_visit_state(self, state_name, G_t):
+        updated = False
+        for vs in self.visit_state:
+            if vs.name == state_name:
+                vs.N = vs.N + 1
+                learning_rate = 0.5 * 1 / vs.N
+                vs.V = vs.V + learning_rate * (G_t - vs.V)
+                updated = True
+                break
+        if not updated:
+            self.visit_state.append(VisitState(name=state_name, total_G=None, N=1, V=G_t))
+
+
+# main loop
+if __name__ == "__main__":
+    env = Env()
+    agent = IMCAgent(actions=list(range(env.n_actions)))
+
+    for episode in range(1000):
+        state = env.reset()
+        action = agent.get_action(state)
+
+        while True:
+            env.render()
+
+            # forward to next state. reward is number and done is boolean
+            next_state, reward, done = env.step(action)
+            agent.save_sample(next_state, reward, done)
+
+            # get next action
+            action = agent.get_action(next_state)
+
+            # at the end of each episode, update the v function table
+            if done:
+                print("episode : ", episode)
+                agent.update()
+                agent.samples.clear()
+                break
