@@ -2,16 +2,17 @@
 
 --------------------------------------------------------------------------------
 
-> Minimal and clean examples of reinforcement learning algorithms presented by [RLCode](https://rlcode.github.io) team. [[한국어]](https://github.com/rlcode/reinforcement-learning-kr)
+> Reinforcement Learning algorithms as presented on the [CS234 Course](http://web.stanford.edu/class/cs234/CS234Win2019/index.html) by Prof. Emma Brunnskill.
 >
-> Maintainers - [Woongwon](https://github.com/dnddnjs), [Youngmoo](https://github.com/zzing0907), [Hyeokreal](https://github.com/Hyeokreal), [Uiryeong](https://github.com/wooridle), [Keon](https://github.com/keon)
+> [Lectures videos](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u)
+>
+> Forked from rlcode/reinforcement-learning
 
 From the basics to deep reinforcement learning, this repo provides easy-to-read code examples. One file for each algorithm.
-Please feel free to create a [Pull Request](https://github.com/rlcode/reinforcement-learning/pulls), or open an [issue](https://github.com/rlcode/reinforcement-learning/issues)!
 
 ## Dependencies
-1. Python 3.5
-2. Tensorflow 1.0.0
+1. Python
+2. Tensorflow
 3. Keras
 4. numpy
 5. pandas
@@ -33,9 +34,9 @@ pip install -r requirements.txt
 - [Value Iteration](./1-grid-world/2-value-iteration)
 - [Monte Carlo](./1-grid-world/3-monte-carlo)
 - [SARSA](./1-grid-world/4-sarsa)
-- [Q-Learning](./1-grid-world/5-q-learning)
-- [Deep SARSA](./1-grid-world/6-deep-sarsa)
-- [REINFORCE](./1-grid-world/7-reinforce)
+- [Q-Learning](1-grid-world/6-q-learning)
+- [Deep SARSA](1-grid-world/7-deep-sarsa)
+- [REINFORCE](1-grid-world/8-reinforce)
 
 **CartPole** - Applying deep reinforcement learning on basic Cartpole game.
 
