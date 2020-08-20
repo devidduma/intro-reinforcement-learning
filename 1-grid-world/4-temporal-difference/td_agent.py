@@ -4,11 +4,14 @@ from collections import defaultdict
 from environment import Env
 
 
-class VisitState:
-    def __init__(self, total_G = 0, N = 0, V = 0):
-        self.total_G = total_G
-        self.N = N
-        self.V = V
+class Tuple:
+    def __init__(self, state, action, reward, next_state, next_action, done):
+        self.state = state
+        self.action = action
+        self.reward = reward
+        self.next_state = next_state
+        self.next_action = next_action
+        self.done = done
 
 # Temporal Difference Agent which learns from each tuple during an episode
 class TDAgent:
@@ -18,30 +21,28 @@ class TDAgent:
         self.actions = actions
         self.discount_factor = 0.9
         self.epsilon = 0.1
-        self.tuple = []
-        self.value_table = defaultdict(VisitState)
+        self.tuple = None
+        self.learning_rate = 0.9
+        self.value_table = defaultdict(float)
 
     # append sample to memory(state, reward, done)
-    def save_tuple(self, state, reward, done):
-        self.tuple.append([state, reward, done])
+    def save_tuple(self, tuple):
+        self.tuple = tuple
 
     # for every tuple, agent updates v function of visited states
     def update(self):
-        pass
+        state_name = str(self.tuple.state)
+        next_state_name = str(self.tuple.next_state)
 
-    # update visited states for first visit or every visit MC
-    def update_global_value_table(self, state_name, G_t):
-        """
-        updated = False
-        if state_name in self.value_table:
-            state = self.value_table[state_name]
-            state.total_G = state.total_G + G_t
-            state.N = state.N + 1
-            state.V = state.total_G / state.N
-            updated = True
-        if not updated:
-            self.value_table[state_name] = VisitState(total_G=G_t, N=1, V=G_t)
-        """
+        V = self.value_table[state_name]
+        next_V = self.value_table[next_state_name]
+        reward = self.tuple.reward
+
+        TD_Target = reward + self.discount_factor * next_V
+        TD_Error = TD_Target - V
+        V = V + self.learning_rate * TD_Error
+
+        self.value_table[state_name] = V
 
 
     # get action for the state according to the v function table
@@ -76,21 +77,21 @@ class TDAgent:
         next_state = [0.0] * 4
 
         if row != 0:
-            next_state[0] = self.value_table[str([col, row - 1])].V
+            next_state[0] = self.value_table[str([col, row - 1])]
         else:
-            next_state[0] = self.value_table[str(state)].V
+            next_state[0] = self.value_table[str(state)]
         if row != self.height - 1:
-            next_state[1] = self.value_table[str([col, row + 1])].V
+            next_state[1] = self.value_table[str([col, row + 1])]
         else:
-            next_state[1] = self.value_table[str(state)].V
+            next_state[1] = self.value_table[str(state)]
         if col != 0:
-            next_state[2] = self.value_table[str([col - 1, row])].V
+            next_state[2] = self.value_table[str([col - 1, row])]
         else:
-            next_state[2] = self.value_table[str(state)].V
+            next_state[2] = self.value_table[str(state)]
         if col != self.width - 1:
-            next_state[3] = self.value_table[str([col + 1, row])].V
+            next_state[3] = self.value_table[str([col + 1, row])]
         else:
-            next_state[3] = self.value_table[str(state)].V
+            next_state[3] = self.value_table[str(state)]
 
         return next_state
 
@@ -109,18 +110,20 @@ if __name__ == "__main__":
 
             # forward to next state. reward is number and done is boolean
             next_state, reward, done = env.step(action)
+            # get next action
+            next_action = agent.get_action(next_state)
 
             # save only next tuple
-            agent.save_tuple(next_state, reward, done)
+            agent.save_tuple(Tuple(state, action, reward, next_state, next_action, done))
             # update v values immediately
             agent.update()
             # clear tuple
-            agent.tuple.clear()
+            agent.tuple = None
 
-            # get next action
-            action = agent.get_action(next_state)
+            state = next_state
+            action = next_action
 
-            # at the end of each episode, update the v function table
+            # at the end of each episode, print episode info
             if done:
                 print("episode : ", episode)
                 break
