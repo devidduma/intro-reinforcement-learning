@@ -5,10 +5,9 @@ class FVMCAgent (MCAgent):
     def __init__(self, actions):
         super(FVMCAgent, self).__init__(actions)
 
-    # for every episode, agent updates q function of visited states
+    # for every episode, agent updates v function of visited states
     def update(self):
         all_states = super(FVMCAgent, self).update()
-        # use either first visit, every visit or incremental MC
         self.first_visit_mc(all_states)
 
     def first_visit_mc(self, all_states):
