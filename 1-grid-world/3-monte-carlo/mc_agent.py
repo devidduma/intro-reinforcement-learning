@@ -1,7 +1,6 @@
 import numpy as np
 import random
 from collections import defaultdict
-import sys
 from environment import Env
 
 
@@ -68,25 +67,9 @@ class MCAgent:
     @staticmethod
     def arg_max(next_state):
         max_index_list = []
-        max_value = None
-
-        # check if all values are None
-        for value in next_state:
-            if value is not None:
-                max_value = value
-                break
-
-        # if all values are None, no action is allowed, so we choose one of the actions at random
-        if max_value is None:
-            max_index_list = [0, 1, 2, 3]
-            return random.choice(max_index_list)
-
-        # otherwise, there is at least one action allowed
-        # we search for the optimal action
+        max_value = next_state[0]
         for index, value in enumerate(next_state):
-            if value is None:
-                continue
-            elif value > max_value:
+            if value > max_value:
                 max_index_list.clear()
                 max_value = value
                 max_index_list.append(index)
@@ -102,18 +85,18 @@ class MCAgent:
         if row != 0:
             next_state[0] = self.value_table[str([col, row - 1])].V
         else:
-            next_state[0] = None
+            next_state[0] = self.value_table[str(state)].V
         if row != self.height - 1:
             next_state[1] = self.value_table[str([col, row + 1])].V
         else:
-            next_state[1] = None
+            next_state[1] = self.value_table[str(state)].V
         if col != 0:
             next_state[2] = self.value_table[str([col - 1, row])].V
         else:
-            next_state[2] = None
+            next_state[2] = self.value_table[str(state)].V
         if col != self.width - 1:
             next_state[3] = self.value_table[str([col + 1, row])].V
         else:
-            next_state[3] = None
+            next_state[3] = self.value_table[str(state)].V
 
         return next_state
