@@ -1,8 +1,9 @@
-> Reinforcement Learning algorithms as presented on the [CS234 Course](http://web.stanford.edu/class/cs234/CS234Win2019/index.html) by Prof. Emma Brunnskill. ([Lectures videos](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u))
->
-> Forked from rlcode/reinforcement-learning
+Reinforcement Learning algorithms as presented on the [CS234 Course](http://web.stanford.edu/class/cs234/CS234Win2019/index.html) by Prof. Emma Brunnskill. ([Lecture videos](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u))
+Forked from rlcode/reinforcement-learning
 
 From the basics to deep reinforcement learning, this repo provides easy-to-read code examples. One file for each algorithm.
+
+Currently under development.
 
 ## Dependencies
 1. Python
