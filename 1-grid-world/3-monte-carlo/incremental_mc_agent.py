@@ -15,21 +15,18 @@ class IMCAgent(MCAgent):
     def incremental_mc(self, all_states):
         for state in all_states:
             self.update_global_visit_state(state[0], state[1])
-        for state in self.visit_state:
-            self.value_table[state.name] = state.V
 
     # redefined update visited states for incremental MC
     def update_global_visit_state(self, state_name, G_t):
         updated = False
-        for vs in self.visit_state:
-            if vs.name == state_name:
-                vs.N = vs.N + 1
-                learning_rate = 0.5 * 1 / vs.N
-                vs.V = vs.V + learning_rate * (G_t - vs.V)
-                updated = True
-                break
+        if state_name in self.value_table:
+            state = self.value_table[state_name]
+            state.N = state.N + 1
+            learning_rate = 0.5 * 1 / state.N
+            state.V = state.V + learning_rate * (G_t - state.V)
+            updated = True
         if not updated:
-            self.visit_state.append(VisitState(name=state_name, total_G=None, N=1, V=G_t))
+            self.value_table[state_name] = VisitState(total_G=G_t, N=1, V=G_t)
 
 
 # main loop

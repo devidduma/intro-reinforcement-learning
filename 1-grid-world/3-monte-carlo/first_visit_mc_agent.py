@@ -10,15 +10,13 @@ class FVMCAgent (MCAgent):
         all_states = super(FVMCAgent, self).update()
         # use either first visit, every visit or incremental MC
         self.first_visit_mc(all_states)
-    
+
     def first_visit_mc(self, all_states):
         visit_state = []
         for state in all_states:
             if state[0] not in visit_state:
                 visit_state.append(state[0])
-                self.update_global_visit_state(state[0], state[1])
-        for state in self.visit_state:
-            self.value_table[state.name] = state.V
+                self.update_global_value_table(state[0], state[1])
 
 
 # main loop

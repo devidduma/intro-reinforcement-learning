@@ -5,8 +5,7 @@ from environment import Env
 
 
 class VisitState:
-    def __init__(self, name, total_G, N, V):
-        self.name = name
+    def __init__(self, total_G = 0, N = 0, V = 0):
         self.total_G = total_G
         self.N = N
         self.V = V
@@ -20,8 +19,7 @@ class MCAgent:
         self.discount_factor = 0.9
         self.epsilon = 0.1
         self.samples = []
-        self.value_table = defaultdict(float)
-        self.visit_state = []
+        self.value_table = defaultdict(VisitState)
 
     # append sample to memory(state, reward, done)
     def save_sample(self, state, reward, done):
@@ -41,17 +39,16 @@ class MCAgent:
         return all_states
 
     # update visited states for first visit or every visit MC
-    def update_global_visit_state(self, state_name, G_t):
+    def update_global_value_table(self, state_name, G_t):
         updated = False
-        for vs in self.visit_state:
-            if vs.name == state_name:
-                vs.total_G = vs.total_G + G_t
-                vs.N = vs.N + 1
-                vs.V = vs.total_G / vs.N
-                updated = True
-                break
+        if state_name in self.value_table:
+            state = self.value_table[state_name]
+            state.total_G = state.total_G + G_t
+            state.N = state.N + 1
+            state.V = state.total_G / state.N
+            updated = True
         if not updated:
-            self.visit_state.append(VisitState(name=state_name, total_G=G_t, N=1, V=G_t))
+            self.value_table[state_name] = VisitState(total_G=G_t, N=1, V=G_t)
 
 
     # get action for the state according to the v function table
@@ -86,20 +83,20 @@ class MCAgent:
         next_state = [0.0] * 4
 
         if row != 0:
-            next_state[0] = self.value_table[str([col, row - 1])]
+            next_state[0] = self.value_table[str([col, row - 1])].V
         else:
-            next_state[0] = self.value_table[str(state)]
+            next_state[0] = self.value_table[str(state)].V
         if row != self.height - 1:
-            next_state[1] = self.value_table[str([col, row + 1])]
+            next_state[1] = self.value_table[str([col, row + 1])].V
         else:
-            next_state[1] = self.value_table[str(state)]
+            next_state[1] = self.value_table[str(state)].V
         if col != 0:
-            next_state[2] = self.value_table[str([col - 1, row])]
+            next_state[2] = self.value_table[str([col - 1, row])].V
         else:
-            next_state[2] = self.value_table[str(state)]
+            next_state[2] = self.value_table[str(state)].V
         if col != self.width - 1:
-            next_state[3] = self.value_table[str([col + 1, row])]
+            next_state[3] = self.value_table[str([col + 1, row])].V
         else:
-            next_state[3] = self.value_table[str(state)]
+            next_state[3] = self.value_table[str(state)].V
 
         return next_state

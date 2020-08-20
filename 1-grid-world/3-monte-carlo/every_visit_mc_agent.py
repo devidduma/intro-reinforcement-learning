@@ -14,9 +14,7 @@ class EVMCAgent(MCAgent):
 
     def every_visit_mc(self, all_states):
         for state in all_states:
-                self.update_global_visit_state(state[0], state[1])
-        for state in self.visit_state:
-            self.value_table[state.name] = state.V
+                self.update_global_value_table(state[0], state[1])
 
 
 # main loop
