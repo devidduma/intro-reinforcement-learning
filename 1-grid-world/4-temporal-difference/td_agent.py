@@ -22,7 +22,7 @@ class TDAgent:
         self.value_table = defaultdict(VisitState)
 
     # append sample to memory(state, reward, done)
-    def save_sample(self, state, reward, done):
+    def save_tuple(self, state, reward, done):
         self.tuple.append([state, reward, done])
 
     # for every tuple, agent updates v function of visited states
@@ -93,3 +93,34 @@ class TDAgent:
             next_state[3] = self.value_table[str(state)].V
 
         return next_state
+
+
+# main loop
+if __name__ == "__main__":
+    env = Env()
+    agent = TDAgent(actions=list(range(env.n_actions)))
+
+    for episode in range(1000):
+        state = env.reset()
+        action = agent.get_action(state)
+
+        while True:
+            env.render()
+
+            # forward to next state. reward is number and done is boolean
+            next_state, reward, done = env.step(action)
+
+            # save only next tuple
+            agent.save_tuple(next_state, reward, done)
+            # update v values immediately
+            agent.update()
+            # clear tuple
+            agent.tuple.clear()
+
+            # get next action
+            action = agent.get_action(next_state)
+
+            # at the end of each episode, update the v function table
+            if done:
+                print("episode : ", episode)
+                break
