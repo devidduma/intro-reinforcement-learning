@@ -1,10 +1,4 @@
-<p align="center"><img width="90%" src="images/Reinforcement-Learning.png"></p>
-
---------------------------------------------------------------------------------
-
-> Reinforcement Learning algorithms as presented on the [CS234 Course](http://web.stanford.edu/class/cs234/CS234Win2019/index.html) by Prof. Emma Brunnskill.
->
-> [Lectures videos](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u)
+> Reinforcement Learning algorithms as presented on the [CS234 Course](http://web.stanford.edu/class/cs234/CS234Win2019/index.html) by Prof. Emma Brunnskill. ([Lectures videos](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u))
 >
 > Forked from rlcode/reinforcement-learning
 
@@ -33,7 +27,7 @@ pip install -r requirements.txt
 - [Policy Iteration](./1-grid-world/1-policy-iteration)
 - [Value Iteration](./1-grid-world/2-value-iteration)
 - [Monte Carlo](./1-grid-world/3-monte-carlo)
-- [SARSA](./1-grid-world/4-sarsa)
+- [SARSA](1-grid-world/5-sarsa)
 - [Q-Learning](1-grid-world/6-q-learning)
 - [Deep SARSA](1-grid-world/7-deep-sarsa)
 - [REINFORCE](1-grid-world/8-reinforce)
