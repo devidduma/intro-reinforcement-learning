@@ -17,7 +17,8 @@ class MCAgent:
         self.height = 5
         self.actions = actions
         self.discount_factor = 0.9
-        self.epsilon = 0.1
+        self.decaying_epsilon_counter = 1
+        self.decaying_epsilon_mul_factor = 0.2
         self.samples = []
         self.q_value_table = defaultdict(VisitStateAction)
 
@@ -55,7 +56,8 @@ class MCAgent:
     # get action for the state according to the q function table
     # agent pick action of epsilon-greedy policy
     def get_action(self, state):
-        if np.random.rand() < self.epsilon:
+        epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+        if np.random.rand() < epsilon:
             # take random action
             action = np.random.choice(self.actions)
         else:
