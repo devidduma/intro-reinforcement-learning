@@ -29,10 +29,11 @@ pip install -r requirements.txt
 - [Value Iteration](./1-grid-world/2-value-iteration)
 - [Monte Carlo](./1-grid-world/3-monte-carlo)
 - [Temporal Difference](./1-grid-world/4-temporal-difference)
-- [SARSA](1-grid-world/5-sarsa)
-- [Q-Learning](1-grid-world/6-q-learning)
-- [Deep SARSA](1-grid-world/7-deep-sarsa)
-- [REINFORCE](1-grid-world/8-reinforce)
+- [Monte Carlo Q Evaluation](./1-grid-world/5-monte-carlo-q-evaluation)
+- [SARSA](1-grid-world/6-sarsa)
+- [Q-Learning](1-grid-world/7-q-learning)
+- [Deep SARSA](1-grid-world/8-deep-sarsa)
+- [REINFORCE](1-grid-world/9-reinforce)
 
 **CartPole** - Applying deep reinforcement learning on basic Cartpole game.
 
