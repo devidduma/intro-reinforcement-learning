@@ -5,6 +5,7 @@ from environment import Env
 
 
 # SARSA agent learns every time step from the sample <s, a, r, s', a'>
+# render sleep time updated to 0.005
 class SARSAgent:
     def __init__(self, actions):
         self.actions = actions
