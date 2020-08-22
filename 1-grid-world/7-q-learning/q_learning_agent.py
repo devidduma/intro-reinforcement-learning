@@ -16,8 +16,9 @@ class QLearningAgent:
     def learn(self, state, action, reward, next_state):
         current_q = self.q_table[state][action]
         # using Bellman Optimality Equation to update q function
-        new_q = reward + self.discount_factor * max(self.q_table[next_state])
-        self.q_table[state][action] += self.learning_rate * (new_q - current_q)
+        QL_Target = reward + self.discount_factor * max(self.q_table[next_state])
+        QL_Error = QL_Target - current_q
+        self.q_table[state][action] = self.q_table[state][action] + self.learning_rate * QL_Error
 
     # get action for the state according to the q function table
     # agent pick action of epsilon-greedy policy
@@ -66,4 +67,5 @@ if __name__ == "__main__":
 
             # if episode ends, then break
             if done:
+                print("episode : ", episode)
                 break
