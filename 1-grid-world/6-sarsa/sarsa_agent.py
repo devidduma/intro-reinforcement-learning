@@ -19,8 +19,9 @@ class SARSAgent:
     def learn(self, state, action, reward, next_state, next_action):
         current_q = self.q_table[state][action]
         next_state_q = self.q_table[next_state][next_action]
-        new_q = (current_q + self.learning_rate *
-                (reward + self.discount_factor * next_state_q - current_q))
+        SRS_Target = reward + self.discount_factor * next_state_q
+        SRS_Error = SRS_Target - current_q
+        new_q = current_q + self.learning_rate * SRS_Error
         self.q_table[state][action] = new_q
 
     # get action for the state according to the q function table
