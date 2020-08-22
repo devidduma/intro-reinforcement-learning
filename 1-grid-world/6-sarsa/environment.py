@@ -138,5 +138,5 @@ class Env(tk.Tk):
         return next_state, reward, done
 
     def render(self):
-        time.sleep(0.03)
+        time.sleep(0.005)
         self.update()

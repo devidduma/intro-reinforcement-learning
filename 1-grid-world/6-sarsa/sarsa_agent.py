@@ -5,12 +5,10 @@ from environment import Env
 
 
 # SARSA agent learns every time step from the sample <s, a, r, s', a'>
-# epsilon greedy seems to work fine
-# decaying epsilon greedy seems to either break things, or requires much longer to converge
 class SARSAgent:
     def __init__(self, actions):
         self.actions = actions
-        self.learning_rate = 0.01
+        self.learning_rate = 0.4
         self.discount_factor = 0.9
         self.decaying_epsilon_counter = 1
         self.decaying_epsilon_mul_factor = 0.2
@@ -62,8 +60,7 @@ if __name__ == "__main__":
         action = agent.get_action(str(state))
 
         while True:
-            if episode > 500:
-                env.render()
+            env.render()
 
             # take action and proceed one step in the environment
             next_state, reward, done = env.step(action)
