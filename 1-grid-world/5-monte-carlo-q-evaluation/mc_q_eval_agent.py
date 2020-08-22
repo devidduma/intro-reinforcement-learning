@@ -38,6 +38,8 @@ class MCAgent:
             all_states.append([state_action_name, G])
         all_states.reverse()
 
+        self.decaying_epsilon_counter = self.decaying_epsilon_counter + 1
+
         return all_states
 
     # update visited states for first visit or every visit MC

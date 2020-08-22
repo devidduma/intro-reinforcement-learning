@@ -48,8 +48,6 @@ if __name__ == "__main__":
                 agent.update()
                 agent.samples.clear()
 
-                agent.decaying_epsilon_counter = agent.decaying_epsilon_counter + 1
-
                 """
                 for state_action in agent.q_value_table:
                     print("SA: ",state_action, " N: ", agent.q_value_table[state_action].N, " Q: ", agent.q_value_table[state_action].Q)
