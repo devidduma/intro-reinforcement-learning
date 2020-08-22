@@ -14,17 +14,18 @@ class Tuple:
         self.done = done
 
 # Temporal Difference Agent which learns from each tuple during an episode
-# epsilon greedy seems to converge to a policy where the agent is "fearful" of being near triangles
-# decaying epsilon greedy showed no improvement
+# neither epsilon nor decaying epsilon greedy policy showed any successful results: agent avoids getting near triangles at all costs
+# render sleep time updated to 0.01
 class TDAgent:
     def __init__(self, actions):
         self.width = 5
         self.height = 5
         self.actions = actions
         self.discount_factor = 0.9
-        self.epsilon = 0.1
+        self.decaying_epsilon_counter = 1
+        self.decaying_epsilon_mul_factor = 0.2
         self.tuple = None
-        self.learning_rate = 0.9
+        self.learning_rate = 0.4
         self.value_table = defaultdict(float)
 
     # append sample to memory(state, reward, done)
@@ -50,7 +51,8 @@ class TDAgent:
     # get action for the state according to the v function table
     # agent pick action of epsilon-greedy policy
     def get_action(self, state):
-        if np.random.rand() < self.epsilon:
+        epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+        if np.random.rand() < epsilon:
             # take random action
             action = np.random.choice(self.actions)
         else:
@@ -115,7 +117,7 @@ if __name__ == "__main__":
             # get next action
             next_action = agent.get_action(next_state)
 
-            # save only next tuple
+            # save only tuple
             agent.save_tuple(Tuple(state, action, reward, next_state, next_action, done))
             # update v values immediately
             agent.update()
@@ -127,5 +129,7 @@ if __name__ == "__main__":
 
             # at the end of each episode, print episode info
             if done:
-                print("episode : ", episode)
+                agent.decaying_epsilon_counter = agent.decaying_epsilon_counter + 1
+
+                print("episode : ", episode, "\t[3, 2]: ", agent.value_table["[3, 2]"], " [2, 3]:", agent.value_table["[2, 3]"])
                 break
