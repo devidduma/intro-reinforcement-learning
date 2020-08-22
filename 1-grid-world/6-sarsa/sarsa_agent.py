@@ -5,14 +5,15 @@ from environment import Env
 
 
 # SARSA agent learns every time step from the sample <s, a, r, s', a'>
-# epsilon greedy seems to converge to a policy where the agent is "fearful" of being near triangles
-# decaying epsilon greedy showed no improvement
+# epsilon greedy seems to work fine
+# decaying epsilon greedy seems to either break things, or requires much longer to converge
 class SARSAgent:
     def __init__(self, actions):
         self.actions = actions
         self.learning_rate = 0.01
         self.discount_factor = 0.9
-        self.epsilon = 0.1
+        self.decaying_epsilon_counter = 1
+        self.decaying_epsilon_mul_factor = 0.2
         self.q_table = defaultdict(lambda: [0.0, 0.0, 0.0, 0.0])
 
     # with sample <s, a, r, s', a'>, learns new q function
@@ -26,7 +27,8 @@ class SARSAgent:
     # get action for the state according to the q function table
     # agent pick action of epsilon-greedy policy
     def get_action(self, state):
-        if np.random.rand() < self.epsilon:
+        epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+        if np.random.rand() < epsilon:
             # take random action
             action = np.random.choice(self.actions)
         else:
@@ -60,7 +62,8 @@ if __name__ == "__main__":
         action = agent.get_action(str(state))
 
         while True:
-            env.render()
+            if episode > 500:
+                env.render()
 
             # take action and proceed one step in the environment
             next_state, reward, done = env.step(action)
@@ -77,5 +80,8 @@ if __name__ == "__main__":
 
             # if episode ends, then break
             if done:
+                agent.decaying_epsilon_counter = agent.decaying_epsilon_counter + 1
+
+                print("episode : ", episode)
                 break
 
