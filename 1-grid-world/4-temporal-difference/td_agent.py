@@ -14,6 +14,8 @@ class Tuple:
         self.done = done
 
 # Temporal Difference Agent which learns from each tuple during an episode
+# epsilon greedy seems to converge to a policy where the agent is "fearful" of being near triangles
+# decaying epsilon greedy showed no improvement
 class TDAgent:
     def __init__(self, actions):
         self.width = 5

@@ -5,6 +5,8 @@ from environment import Env
 
 
 # SARSA agent learns every time step from the sample <s, a, r, s', a'>
+# epsilon greedy seems to converge to a policy where the agent is "fearful" of being near triangles
+# decaying epsilon greedy showed no improvement
 class SARSAgent:
     def __init__(self, actions):
         self.actions = actions
