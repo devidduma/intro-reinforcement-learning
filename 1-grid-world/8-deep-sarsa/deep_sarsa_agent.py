@@ -24,7 +24,7 @@ class DeepSARSAgent:
         self.learning_rate = 0.001
 
         self.epsilon = 1.  # exploration
-        self.epsilon_decay = .9999
+        self.epsilon_decay = .999
         self.epsilon_min = 0.01
         self.model = self.build_model()
 
