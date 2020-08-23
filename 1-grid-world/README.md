@@ -4,36 +4,38 @@ The game is simple. The red rectangle must arrive in the circle, avoiding triang
 
 <p align="left"><img width="40%" src="./gridworld.png" /></p>
 
-<br/>
 
 
+### Dynamic Programming
+*1. Policy Iteration*
 
-## Dynamic Programming
-**1. Policy Iteration**
-
-**2. Value Iteration**
+*2. Value Iteration*
     
-<br/>
 
-## Reinforcement Learning Fundamental Algorithms
-**3. Monte-Carlo**
 
-**4. SARSA**
+### Reinforcement Learning Fundamental Algorithms
+*3. Monte Carlo*
 
-**5. Q-Learning**
+*4. Temporal Difference*
 
-<br/>
+*5. Monte Carlo Q Evaluation*
 
-## Futher Reinforcement Learning Algorithms
+*6. SARSA*
+
+*7. Q Learning*
+
+
+
+### Further Reinforcement Learning Algorithms
 >we have changed Grid World so the obstacles are moving. To solve this problem, we have to use function approximator. 
 We used Neural Network as function approximator
 
 <p align="left"><img width="40%" src="./gridworld_changing.png" /></p>
 
-<br/>
 
-**6. DQN**
 
-**7. Policy Gradient**
+*6. DQN*
+
+*7. Policy Gradient*
     
     
