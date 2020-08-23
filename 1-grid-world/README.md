@@ -1,6 +1,5 @@
 ## Grid World with Reinforcement Learning 
 This is Grid World example that we made for simple algorithm testing purposes.
-
 The game is simple. The red rectangle must arrive in the circle, avoiding triangle.
 
 <p align="left"><img width="40%" src="./gridworld.png" /></p>
