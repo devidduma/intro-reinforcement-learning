@@ -36,8 +36,8 @@ class DeepMCAgent:
             self.model.load_weights('./save_model/deep_mc_trained.h5')
 
     # append sample to memory(state, reward, done)
-    def save_sample(self, state, reward, done):
-        self.samples.append([state, reward, done])
+    def save_sample(self, state, action, reward, done):
+        self.samples.append([state, action, reward, done])
 
     # approximate Q function using Neural Network
     # state is input and Q Value of each action is output of network
@@ -45,7 +45,7 @@ class DeepMCAgent:
         model = Sequential()
         model.add(Dense(30, input_dim=self.state_size, activation='relu'))
         model.add(Dense(30, activation='relu'))
-        model.add(Dense(1, activation='linear'))
+        model.add(Dense(self.action_size, activation='linear'))
         model.summary()
         model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
         return model
@@ -58,22 +58,21 @@ class DeepMCAgent:
         else:
             # Predict the reward value based on the given state
             state = np.float32(state)
-            v_values = self.model.predict(state)
-            return np.argmax(v_values[0])
+            q_values = self.model.predict(state)
+            return np.argmax(q_values[0])
 
-    def train_model(self, visited_states_batch, G_batch):
-        visited_states_batch = np.array(visited_states_batch, dtype=np.float32).reshape([-1, 15])
-        #visited_states_batch = tf.convert_to_tensor(visited_states_batch)
-        G_batch = np.array(G_batch, dtype=np.float32).reshape(-1, 1)
-        #G_batch = tf.convert_to_tensor(G_batch)
-        print(visited_states_batch)
-        print(G_batch)
-        print(np.shape(visited_states_batch))
-        print(np.shape(G_batch))
+
+    def train_model(self, visited_state, action, G_t):
+        
+        target = self.model.predict(visited_state)[0]
+        # update target with observed G_t
+        target[action] = G_t
+
+        target = np.reshape(target, [1, 5])
 
         # make batches with target G_t (returns)
         # and do the model fit!
-        self.model.fit(visited_states_batch, G_batch, epochs=1, verbose=0, batch_size=4)
+        self.model.fit(visited_state, target, epochs=1, verbose=0)
 
     # for every episode, calculate return of visited states
     def calculate_returns(self):
@@ -82,7 +81,10 @@ class DeepMCAgent:
         G = 0
         for reward in reversed(self.samples):
             G = reward[1] + self.discount_factor * G
-            all_states.append([reward[0], G])
+            state_info = reward[0]
+            action = reward[1]
+            done = reward[3]
+            all_states.append([state_info, action, G, done])
         all_states.reverse()
 
         return all_states
@@ -94,15 +96,16 @@ class DeepMCAgent:
 
         visit_state = []
         for state in all_states:
-            if str(state[0]) not in visit_state:
-                visit_state.append(str(state[0]))
-                all_states_filtered = np.concatenate((all_states_filtered, state[0]), axis=0)
-                all_Gt_filtered.append(state[1])
-
-
-        #print(all_states_filtered)
-        #print(all_Gt_filtered)
-        self.train_model(all_states_filtered, all_Gt_filtered)
+            state_info = state[0]
+            action = state[1]
+            G_t = state[2]
+            done = state[3]
+            if str(state_info) not in visit_state:
+                visit_state.append(str(state_info))
+                #all_states_filtered = np.concatenate((all_states_filtered, state[0]), axis=0)
+                #all_Gt_filtered.append(state[1])
+                if not done:
+                    self.train_model(state_info, action, G_t)
 
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
@@ -118,7 +121,7 @@ if __name__ == "__main__":
         done = False
         score = 0
         state = env.reset()
-        state = np.reshape(state, [15])
+        state = np.reshape(state, [1, 15])
 
         while not done:
             # fresh env
@@ -127,10 +130,10 @@ if __name__ == "__main__":
             # get action for the current state and go one step in environment
             action = agent.get_action(state)
             next_state, reward, done = env.step(action)
-            next_state = np.reshape(next_state, [15])
+            next_state = np.reshape(next_state, [1, 15])
 
             # save tuple to episode
-            agent.save_sample(next_state, reward, done)
+            agent.save_sample(state, action, reward, False)
 
             state = next_state
             # every time step we do training
@@ -143,6 +146,9 @@ if __name__ == "__main__":
                 episodes.append(e)
                 pylab.plot(episodes, scores, 'b')
                 pylab.savefig("./save_graph/deep_mc_.png")
+
+                # we don't need last tuple
+                #agent.save_sample(state, None, 0, True)
 
                 agent.first_visit_mc()
                 agent.samples.clear()
