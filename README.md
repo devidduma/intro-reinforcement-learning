@@ -32,6 +32,7 @@ pip install -r requirements.txt
 - [Monte Carlo Q Evaluation](./1-grid-world/5-monte-carlo-q-evaluation)
 - [SARSA](1-grid-world/6-sarsa)
 - [Q-Learning](1-grid-world/7-q-learning)
+- [Deep Monte Carlo Q Evaluation](1-grid-world/8-deep-monte-carlo-q-evaluation)
 - [Deep SARSA](1-grid-world/8-deep-sarsa)
 - [REINFORCE](1-grid-world/9-reinforce)
 
