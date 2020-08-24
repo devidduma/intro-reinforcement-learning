@@ -12,7 +12,7 @@ EPISODES = 1000
 
 
 # this is DeepMC Agent for the GridWorld
-# Utilize Neural Network as v function approximator
+# Utilize Neural Network as q function approximator
 class DeepMCAgent:
     def __init__(self):
         self.load_model = False
@@ -25,7 +25,7 @@ class DeepMCAgent:
         self.learning_rate = 0.001
 
         self.epsilon = 1.  # exploration
-        self.epsilon_decay = .96
+        self.epsilon_decay = .999
         self.epsilon_min = 0.01
         self.model = self.build_model()
 
@@ -57,22 +57,20 @@ class DeepMCAgent:
             return random.randrange(self.action_size)
         else:
             # Predict the reward value based on the given state
-            state = np.float32(state)
+            state = np.array(state, dtype=np.float32).reshape(-1, self.state_size)
             q_values = self.model.predict(state)
             return np.argmax(q_values[0])
 
+    def train_model(self, visit_state_batch, action_batch, G_t_batch):
 
-    def train_model(self, visited_state, action, G_t):
-        
-        target = self.model.predict(visited_state)[0]
+        target_batch = self.model.predict(visit_state_batch)
         # update target with observed G_t
-        target[action] = G_t
-
-        target = np.reshape(target, [1, 5])
+        for target, action, G_t in zip(target_batch, action_batch, G_t_batch):
+            target[action] = G_t
 
         # make batches with target G_t (returns)
         # and do the model fit!
-        self.model.fit(visited_state, target, epochs=1, verbose=0)
+        self.model.fit(visit_state_batch, target_batch, epochs=4, verbose=0, batch_size=4)
 
     # for every episode, calculate return of visited states
     def calculate_returns(self):
@@ -91,8 +89,9 @@ class DeepMCAgent:
 
     def first_visit_mc(self):
         all_states = self.calculate_returns()
-        all_states_filtered = []
-        all_Gt_filtered = []
+        visit_state_batch = []
+        action_batch = []
+        G_t_batch = []
 
         visit_state = []
         for state in all_states:
@@ -102,13 +101,18 @@ class DeepMCAgent:
             done = state[3]
             if str(state_info) not in visit_state:
                 visit_state.append(str(state_info))
-                #all_states_filtered = np.concatenate((all_states_filtered, state[0]), axis=0)
-                #all_Gt_filtered.append(state[1])
-                if not done:
-                    self.train_model(state_info, action, G_t)
 
-        if self.epsilon > self.epsilon_min:
-            self.epsilon *= self.epsilon_decay
+                visit_state_batch.append(state_info)
+                action_batch.append(action)
+                G_t_batch.append(G_t)
+
+        visit_state_batch = np.array(visit_state_batch, dtype=np.float32).reshape(-1, self.state_size)
+
+        #print(np.shape(visit_state_batch))
+        #print(np.shape(action_batch))
+        #print(np.shape(G_t_batch))
+        self.train_model(visit_state_batch, action_batch, G_t_batch)
+
 
 if __name__ == "__main__":
     env = Env()
@@ -121,16 +125,19 @@ if __name__ == "__main__":
         done = False
         score = 0
         state = env.reset()
-        state = np.reshape(state, [1, 15])
+        state = np.reshape(state, [15])
 
         while not done:
+            if agent.epsilon > agent.epsilon_min:
+                agent.epsilon *= agent.epsilon_decay
+
             # fresh env
             global_step += 1
 
             # get action for the current state and go one step in environment
             action = agent.get_action(state)
             next_state, reward, done = env.step(action)
-            next_state = np.reshape(next_state, [1, 15])
+            next_state = np.reshape(next_state, [15])
 
             # save tuple to episode
             agent.save_sample(state, action, reward, False)
@@ -148,7 +155,7 @@ if __name__ == "__main__":
                 pylab.savefig("./save_graph/deep_mc_.png")
 
                 # we don't need last tuple
-                #agent.save_sample(state, None, 0, True)
+                # agent.save_sample(state, None, 0, True)
 
                 agent.first_visit_mc()
                 agent.samples.clear()

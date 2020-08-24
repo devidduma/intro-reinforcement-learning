@@ -16,7 +16,7 @@ class Env(tk.Tk):
         super(Env, self).__init__()
         self.action_space = ['u', 'd', 'l', 'r']
         self.action_size = len(self.action_space)
-        self.title('DeepSARSA')
+        self.title('Deep Monte Carlo')
         self.geometry('{0}x{1}'.format(HEIGHT * UNIT, HEIGHT * UNIT))
         self.shapes = self.load_images()
         self.canvas = self._build_canvas()
