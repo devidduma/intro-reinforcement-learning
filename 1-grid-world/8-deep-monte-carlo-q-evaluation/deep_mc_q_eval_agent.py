@@ -6,14 +6,13 @@ from environment import Env
 from keras.layers import Dense
 from keras.optimizers import Adam
 from keras.models import Sequential
-import tensorflow as tf
 
 EPISODES = 1000
 
 
-# this is DeepMC Agent for the GridWorld
+# this is Deep MC Q Evaluation Agent for the GridWorld
 # Utilize Neural Network as q function approximator
-class DeepMCAgent:
+class DeepMCQEvalAgent:
     def __init__(self):
         self.load_model = False
         # actions which agent can do
@@ -116,7 +115,7 @@ class DeepMCAgent:
 
 if __name__ == "__main__":
     env = Env()
-    agent = DeepMCAgent()
+    agent = DeepMCQEvalAgent()
 
     global_step = 0
     scores, episodes = [], []
