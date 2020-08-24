@@ -26,7 +26,7 @@ The game is simple. The red rectangle must arrive in the circle, avoiding triang
 
 
 
-### Further Reinforcement Learning Algorithms
+### Deep Reinforcement Learning Algorithms
 >we have changed Grid World so the obstacles are moving. To solve this problem, we have to use function approximator. 
 We used Neural Network as function approximator
 
@@ -34,8 +34,10 @@ We used Neural Network as function approximator
 
 
 
-*6. DQN*
+*8. Deep MC Q Evaluation*
 
-*7. Policy Gradient*
+*9. Deep SARSA*
+
+*10. REINFORCE*
     
     
