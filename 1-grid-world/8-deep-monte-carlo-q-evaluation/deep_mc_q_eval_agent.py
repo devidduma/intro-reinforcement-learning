@@ -86,7 +86,7 @@ class DeepMCQEvalAgent:
 
         return all_states
 
-    def first_visit_mc(self):
+    def first_or_every_visit_mc(self, first_visit=True):
         all_states = self.calculate_returns()
         visit_state_batch = []
         action_batch = []
@@ -98,7 +98,7 @@ class DeepMCQEvalAgent:
             action = state[1]
             G_t = state[2]
             done = state[3]
-            if str(state_info) not in visit_state:
+            if not first_visit or str(state_info) not in visit_state:
                 visit_state.append(str(state_info))
 
                 visit_state_batch.append(state_info)
@@ -151,16 +151,16 @@ if __name__ == "__main__":
                 scores.append(score)
                 episodes.append(e)
                 pylab.plot(episodes, scores, 'b')
-                pylab.savefig("./save_graph/deep_mc_.png")
+                pylab.savefig("./save_graph/deep_mc_q_eval_.png")
 
                 # we don't need last tuple
-                # agent.save_sample(state, None, 0, True)
+                # agent.save_sample(state, action, 0, True)
 
-                agent.first_visit_mc()
+                agent.first_or_every_visit_mc(first_visit=False)
                 agent.samples.clear()
 
                 print("episode:", e, "  score:", score, "global_step",
                       global_step, "  epsilon:", agent.epsilon)
 
         if e % 100 == 0:
-            agent.model.save_weights("./save_model/deep_mc.h5")
+            agent.model.save_weights("./save_model/deep_mc_q_eval.h5")
