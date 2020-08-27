@@ -12,17 +12,19 @@ from keras.models import Sequential
 EPISODES = 300
 
 
-# 카트폴 예제에서의 DQN 에이전트
+# DQN Agent for the Cartpole
+# it uses Neural Network to approximate q function
+# and prioritized experience replay memory & target q network
 class DQNAgent:
     def __init__(self, state_size, action_size):
         self.render = False
         self.load_model = False
 
-        # 상태와 행동의 크기 정의
+        # get size of state and action
         self.state_size = state_size
         self.action_size = action_size
 
-        # DQN 하이퍼파라미터
+        # These are hyper parameters for the DQN
         self.discount_factor = 0.99
         self.learning_rate = 0.001
         self.epsilon = 1.0
@@ -204,11 +206,10 @@ if __name__ == "__main__":
             state = next_state
 
             if done:
-                # 각 에피소드마다 타깃 모델을 모델의 가중치로 업데이트
+                # every episode update the target model to be same with model
                 agent.update_target_model()
 
 #                score = score if score == 500 else score + 100
-                # 에피소드마다 학습 결과 출력
                 scores.append(score)
                 episodes.append(e)
                 pylab.plot(episodes, scores, 'b')
@@ -216,7 +217,8 @@ if __name__ == "__main__":
                 print("episode:", e, "  score:", score, "  memory length:",
                       step if step <= agent.memory_size else agent.memory_size, "  epsilon:", agent.epsilon)
 
-                # 이전 10개 에피소드의 점수 평균이 490보다 크면 학습 중단
+                # if the mean of scores of last 10 episode is bigger than 490
+                # stop training
                 if np.mean(scores[-min(10, len(scores)):]) > 490:
                     agent.model.save_weights("./save_model/cartpole_dqn.h5")
                     sys.exit()
