@@ -1,0 +1,6 @@
+Batch Monte Carlo
+Incremental MC Q Evaluation
+Deep Monte Carlo
+Deep TD
+
+CNN versions of Deep Methods

@@ -14,11 +14,16 @@ The game is simple. The red rectangle must arrive in the circle, avoiding triang
 
 
 ### Reinforcement Learning Fundamental Algorithms
-*3. Monte Carlo*
+*3. Monte Carlo* 
+- *First Visit*
+- *Every Visit* 
+- *Incremental*
 
 *4. Temporal Difference*
 
 *5. Monte Carlo Q Evaluation*
+- *First Visit*
+- *Every Visit* 
 
 *6. SARSA*
 
