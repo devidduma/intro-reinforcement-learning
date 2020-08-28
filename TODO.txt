@@ -1,6 +1,9 @@
-Batch Monte Carlo
-Incremental MC Q Evaluation
+TODO
 Deep Monte Carlo
 Deep TD
 
 CNN versions of Deep Methods
+
+IGNORED
+Batch Monte Carlo
+Importance Sampling
