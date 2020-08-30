@@ -18,7 +18,7 @@ class DoubleDQNAgent:
     def __init__(self, state_size, action_size):
         # if you want to see Cartpole learning, then change to True
         self.render = False
-        self.load_model = False
+        self.load_model = True
         # get size of state and action
         self.state_size = state_size
         self.action_size = action_size
@@ -32,6 +32,7 @@ class DoubleDQNAgent:
         self.batch_size = 64
         self.train_start = 1000
         # create replay memory using deque
+        # contains <s,a,r,s'> tuples
         self.memory = deque(maxlen=2000)
 
         # create main model and target model
@@ -39,7 +40,7 @@ class DoubleDQNAgent:
         self.target_model = self.build_model()
 
         # initialize target model
-        self.update_target_model()
+        self.next_states_model()
 
         if self.load_model:
             self.model.load_weights("./save_model/cartpole_ddqn.h5")
@@ -59,7 +60,7 @@ class DoubleDQNAgent:
         return model
 
     # after some time interval update the target model to be same with model
-    def update_target_model(self):
+    def next_states_model(self):
         self.target_model.set_weights(self.model.get_weights())
 
     # get action from model using epsilon-greedy policy
@@ -83,20 +84,26 @@ class DoubleDQNAgent:
         batch_size = min(self.batch_size, len(self.memory))
         mini_batch = random.sample(self.memory, batch_size)
 
-        update_input = np.zeros((batch_size, self.state_size))
-        update_target = np.zeros((batch_size, self.state_size))
+        # get s (state) as input from mini_batch
+        # initialize with shape batch_size x state_size
+        curr_states = np.zeros((batch_size, self.state_size))
+        # get s' (next state) as input from mini_batch
+        # initialize with shape batch_size x state_size
+        next_states = np.zeros((batch_size, self.state_size))
         action, reward, done = [], [], []
 
         for i in range(batch_size):
-            update_input[i] = mini_batch[i][0]
+            # get s (state) as input from mini_batch
+            curr_states[i] = mini_batch[i][0]
             action.append(mini_batch[i][1])
             reward.append(mini_batch[i][2])
-            update_target[i] = mini_batch[i][3]
+            # get s' (next state) as input from mini_batch
+            next_states[i] = mini_batch[i][3]
             done.append(mini_batch[i][4])
 
-        target = self.model.predict(update_input)
-        target_next = self.model.predict(update_target)
-        target_val = self.target_model.predict(update_target)
+        target = self.model.predict(curr_states)
+        target_next = self.model.predict(next_states)
+        target_val = self.target_model.predict(next_states)
 
         for i in range(self.batch_size):
             # like Q Learning, get maximum Q value at s'
@@ -105,15 +112,15 @@ class DoubleDQNAgent:
                 target[i][action[i]] = reward[i]
             else:
                 # the key point of Double DQN
-                # selection of action is from model
-                # update is from target model
+                # selection of best action is from model
                 a = np.argmax(target_next[i])
+                # update is from target model
                 target[i][action[i]] = reward[i] + self.discount_factor * (
                     target_val[i][a])
 
         # make minibatch which includes target q value and predicted q value
         # and do the model fit!
-        self.model.fit(update_input, target, batch_size=self.batch_size,
+        self.model.fit(curr_states, target, batch_size=self.batch_size,
                        epochs=1, verbose=0)
 
 
@@ -154,7 +161,7 @@ if __name__ == "__main__":
 
             if done:
                 # every episode update the target model to be same with model
-                agent.update_target_model()
+                agent.next_states_model()
 
                 # every episode, plot the play time
                 score = score if score == 500 else score + 100
