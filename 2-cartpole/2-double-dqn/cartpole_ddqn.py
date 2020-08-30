@@ -114,7 +114,7 @@ class DoubleDQNAgent:
                 # the key point of Double DQN
                 # selection of best action is from model
                 a = np.argmax(target_next[i])
-                # update is from target model
+                # evaluation is from target model
                 target[i][action[i]] = reward[i] + self.discount_factor * (
                     target_val[i][a])
 

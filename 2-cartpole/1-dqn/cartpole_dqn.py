@@ -111,7 +111,7 @@ class DQNAgent:
                 target[i][action[i]] = reward[i]
             else:
                 # selection of best action is from *target* model
-                # update is also from target model
+                # evaluation is also from target model
                 target[i][action[i]] = reward[i] + self.discount_factor * (
                     np.amax(target_val[i]))
 
