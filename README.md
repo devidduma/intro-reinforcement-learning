@@ -38,6 +38,7 @@ pip install -r requirements.txt
     - [Incremental MCQE](./1-grid-world/5-monte-carlo-q-evaluation/incremental_mc_q_eval_agent.py)
 - [SARSA](1-grid-world/6-sarsa)
 - [Q-Learning](1-grid-world/7-q-learning)
+- [Double Q-Learning](1-grid-world/8-double-q-learning)
 - [Deep MC Q Evaluation (Batch)](1-grid-world/8-deep-monte-carlo-q-evaluation)
 - [Deep SARSA](1-grid-world/8-deep-sarsa)
 - [REINFORCE](1-grid-world/9-reinforce)

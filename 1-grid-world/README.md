@@ -30,6 +30,8 @@ The game is simple. The red rectangle must arrive in the circle, avoiding triang
 
 *7. Q Learning*
 
+*8. Double Q Learning*
+
 
 
 ### Deep Reinforcement Learning Algorithms
@@ -40,10 +42,10 @@ We used Neural Network as function approximator
 
 
 
-*8. Deep MC Q Evaluation*
+*9. Deep MC Q Evaluation*
 
-*9. Deep SARSA*
+*10. Deep SARSA*
 
-*10. REINFORCE*
+*11. REINFORCE*
     
     
