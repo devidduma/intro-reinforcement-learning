@@ -14,14 +14,13 @@ class Tuple:
         self.done = done
 
 # Temporal Difference Agent which learns from each tuple during an episode
-# neither epsilon nor decaying epsilon greedy policy showed any successful results: agent avoids getting near triangles at all costs
 # render sleep time updated to 0.01
 class TDAgent:
     def __init__(self, actions):
         self.width = 5
         self.height = 5
         self.actions = actions
-        self.discount_factor = 0.9
+        self.discount_factor = 1
         self.decaying_epsilon_counter = 1
         self.decaying_epsilon_mul_factor = 0.2
         self.tuple = None
@@ -47,6 +46,8 @@ class TDAgent:
 
         self.value_table[state_name] = V
 
+        if self.tuple.done:
+            self.value_table[next_state_name] = reward
 
     # get action for the state according to the v function table
     # agent pick action of epsilon-greedy policy
@@ -108,17 +109,18 @@ if __name__ == "__main__":
     for episode in range(1000):
         state = env.reset()
         action = agent.get_action(state)
+        reward = 0
 
         while True:
             env.render()
 
             # forward to next state. reward is number and done is boolean
-            next_state, reward, done = env.step(action)
+            next_state, next_reward, done = env.step(action)
             # get next action
             next_action = agent.get_action(next_state)
 
             # save only tuple
-            agent.save_tuple(Tuple(state, action, reward, next_state, next_action, done))
+            agent.save_tuple(Tuple(state, action, reward, next_state, next_action, False))
             # update v values immediately
             agent.update()
             # clear tuple
@@ -126,10 +128,20 @@ if __name__ == "__main__":
 
             state = next_state
             action = next_action
+            reward = next_reward
 
             # at the end of each episode, print episode info
             if done:
+                # ---- Terminal State
+                # save only tuple
+                agent.save_tuple(Tuple(state, action, reward, state, action, True))
+                # update v values immediately
+                agent.update()
+                # clear tuple
+                agent.tuple = None
+                # ----
+
                 agent.decaying_epsilon_counter = agent.decaying_epsilon_counter + 1
 
-                print("episode : ", episode, "\t[3, 2]: ", agent.value_table["[3, 2]"], " [2, 3]:", agent.value_table["[2, 3]"])
+                print("episode : ", episode, "\t[3, 2]: ", agent.value_table["[3, 2]"], " [2, 3]:", agent.value_table["[2, 3]"], " [2, 2]:", agent.value_table["[2, 2]"])
                 break
