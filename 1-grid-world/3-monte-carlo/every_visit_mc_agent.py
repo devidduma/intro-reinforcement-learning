@@ -37,7 +37,9 @@ if __name__ == "__main__":
 
             # at the end of each episode, update the v function table
             if done:
-                print("episode : ", episode)
+                print("episode : ", episode, "\t[3, 2]: ", round(agent.value_table["[3, 2]"].V, 2),
+                      " [2, 3]:", round(agent.value_table["[2, 3]"].V, 2), " [2, 2]:", round(agent.value_table["[2, 2]"].V, 2),
+                      "\tepsilon: ", round(agent.epsilon, 2))
                 agent.update()
                 agent.samples.clear()
                 break

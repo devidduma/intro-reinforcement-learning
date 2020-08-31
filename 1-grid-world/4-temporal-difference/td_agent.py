@@ -23,6 +23,7 @@ class TDAgent:
         self.discount_factor = 1
         self.decaying_epsilon_counter = 1
         self.decaying_epsilon_mul_factor = 0.2
+        self.epsilon = None
         self.tuple = None
         self.learning_rate = 0.4
         self.value_table = defaultdict(float)
@@ -52,8 +53,8 @@ class TDAgent:
     # get action for the state according to the v function table
     # agent pick action of epsilon-greedy policy
     def get_action(self, state):
-        epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
-        if np.random.rand() < epsilon:
+        self.epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+        if np.random.rand() < self.epsilon:
             # take random action
             action = np.random.choice(self.actions)
         else:
@@ -143,5 +144,7 @@ if __name__ == "__main__":
 
                 agent.decaying_epsilon_counter = agent.decaying_epsilon_counter + 1
 
-                print("episode : ", episode, "\t[3, 2]: ", agent.value_table["[3, 2]"], " [2, 3]:", agent.value_table["[2, 3]"], " [2, 2]:", agent.value_table["[2, 2]"])
+                print("episode : ", episode, "\t[3, 2]: ", round(agent.value_table["[3, 2]"], 2),
+                      " [2, 3]:", round(agent.value_table["[2, 3]"], 2), " [2, 2]:", round(agent.value_table["[2, 2]"], 2),
+                      "\tepsilon: ", round(agent.epsilon, 2))
                 break
