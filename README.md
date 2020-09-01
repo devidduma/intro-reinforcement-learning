@@ -28,14 +28,10 @@ pip install -r requirements.txt
 - [Policy Iteration](./1-grid-world/1-policy-iteration)
 - [Value Iteration](./1-grid-world/2-value-iteration)
 - [Monte Carlo](./1-grid-world/3-monte-carlo)
-    - [First Visit MC](./1-grid-world/3-monte-carlo/first_visit_mc_agent.py)
-    - [Every Visit MC](./1-grid-world/3-monte-carlo/every_visit_mc_agent.py)
-    - [Incremental MC](./1-grid-world/3-monte-carlo/incremental_mc_agent.py)
+    - [First Visit MC](./1-grid-world/3-monte-carlo/first_visit_mc_agent.py), [Every Visit MC](./1-grid-world/3-monte-carlo/every_visit_mc_agent.py), [Incremental MC](./1-grid-world/3-monte-carlo/incremental_mc_agent.py)
 - [Temporal Difference](./1-grid-world/4-temporal-difference)
 - [Monte Carlo Q Evaluation](./1-grid-world/5-monte-carlo-q-evaluation)
-    - [First Visit MCQE](./1-grid-world/5-monte-carlo-q-evaluation/first_visit_mc_q_eval_agent.py)
-    - [Every Visit MCQE](./1-grid-world/5-monte-carlo-q-evaluation/every_visit_mc_q_eval_agent.py)
-    - [Incremental MCQE](./1-grid-world/5-monte-carlo-q-evaluation/incremental_mc_q_eval_agent.py)
+    - [First Visit MCQE](./1-grid-world/5-monte-carlo-q-evaluation/first_visit_mc_q_eval_agent.py), [Every Visit MCQE](./1-grid-world/5-monte-carlo-q-evaluation/every_visit_mc_q_eval_agent.py), [Incremental MCQE](./1-grid-world/5-monte-carlo-q-evaluation/incremental_mc_q_eval_agent.py)
 - [SARSA](1-grid-world/6-sarsa)
 - [Q-Learning](1-grid-world/7-q-learning)
 - [Double Q-Learning](1-grid-world/8-double-q-learning)
@@ -53,7 +49,7 @@ pip install -r requirements.txt
 
 **Atari** - Mastering Atari games with Deep Reinforcement Learning
 
-- **Breakout** - [DQN](./3-atari/1-breakout/breakout_dqn.py), [DDQN](./3-atari/1-breakout/breakout_ddqn.py) [Dueling DDQN](./3-atari/1-breakout/breakout_ddqn.py) [A3C](./3-atari/1-breakout/breakout_a3c.py)
+- **Breakout** - [DQN](./3-atari/1-breakout/breakout_dqn.py), [DDQN](./3-atari/1-breakout/breakout_ddqn.py), [Dueling DDQN](./3-atari/1-breakout/breakout_ddqn.py), [A3C](./3-atari/1-breakout/breakout_a3c.py)
 - **Pong** - [Policy Gradient](./3-atari/2-pong/pong_reinforce.py)
 
 **OpenAI GYM** - [WIP]
