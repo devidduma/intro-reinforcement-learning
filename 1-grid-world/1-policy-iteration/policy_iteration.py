@@ -6,7 +6,7 @@ from environment import GraphicDisplay, Env
 class PolicyIteration:
     def __init__(self, env):
         self.env = env
-        # 2-d list for the value function
+        # 2D list for the value function
         self.value_table = [[0.0] * env.width for _ in range(env.height)]
         # list of random policy (same probability of up, down, left, right)
         self.policy_table = [[[0.25, 0.25, 0.25, 0.25]] * env.width
@@ -47,16 +47,14 @@ class PolicyIteration:
             max_index = []
             result = [0.0, 0.0, 0.0, 0.0]  # initialize the policy
 
-            # for every actions, calculate
-            # [reward + (discount factor) * (next state value function)]
+            # for each action, calculate: V(S) = reward + (discount factor) * (next state value function)
             for index, action in enumerate(self.env.possible_actions):
                 next_state = self.env.state_after_action(state, action)
                 reward = self.env.get_reward(state, action)
                 next_value = self.get_value(next_state)
                 temp = reward + self.discount_factor * next_value
 
-                # We normally can't pick multiple actions in greedy policy.
-                # but here we allow multiple actions with same max values
+                # Here we allow multiple actions with same max values, in order to find many global optima
                 if temp == value:
                     max_index.append(index)
                 elif temp > value:
