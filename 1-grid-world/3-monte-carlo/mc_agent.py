@@ -5,10 +5,11 @@ from environment import Env
 
 
 class VisitState:
-    def __init__(self, total_G = 0, N = 0, V = 0):
+    def __init__(self, total_G=0, N=0, V=0):
         self.total_G = total_G
         self.N = N
         self.V = V
+
 
 # Monte Carlo Agent which learns every episodes from the sample
 class MCAgent:
@@ -27,8 +28,8 @@ class MCAgent:
     def save_sample(self, state, reward, done):
         self.samples.append([state, reward, done])
 
-    # for every episode, agent updates v function of visited states
-    def update(self):
+    # for every episode calculate V values of visited states and return info
+    def preprocess_visited_states(self):
         # state name and G for each state as appeared in the episode
         all_states = []
         G = 0
@@ -42,18 +43,13 @@ class MCAgent:
 
         return all_states
 
+    # to be defined in children classes
+    def mc(self):
+        pass
+
     # update visited states for first visit or every visit MC
     def update_global_value_table(self, state_name, G_t):
-        updated = False
-        if state_name in self.value_table:
-            state = self.value_table[state_name]
-            state.total_G = state.total_G + G_t
-            state.N = state.N + 1
-            state.V = state.total_G / state.N
-            updated = True
-        if not updated:
-            self.value_table[state_name] = VisitState(total_G=G_t, N=1, V=G_t)
-
+        pass
 
     # get action for the state according to the v function table
     # agent pick action of epsilon-greedy policy
@@ -105,3 +101,30 @@ class MCAgent:
             next_state[3] = self.value_table[str(state)].V
 
         return next_state
+
+    # to be called in a main loop
+    def mainloop(self, env):
+        for episode in range(1000):
+            state = env.reset()
+            action = self.get_action(state)
+
+            while True:
+                env.render()
+
+                # forward to next state. reward is number and done is boolean
+                next_state, reward, done = env.step(action)
+                self.save_sample(next_state, reward, done)
+
+                # get next action
+                action = self.get_action(next_state)
+
+                # at the end of each episode, update the v function table
+                if done:
+                    print("episode : ", episode, "\t[3, 2]: ", round(self.value_table["[3, 2]"].V, 2),
+                          " [2, 3]:", round(self.value_table["[2, 3]"].V, 2), " [2, 2]:",
+                          round(self.value_table["[2, 2]"].V, 2),
+                          "\tepsilon: ", round(self.epsilon, 2))
+                    self.mc()
+                    self.samples.clear()
+                    break
+
