@@ -28,7 +28,7 @@ class MCAgent:
     def save_sample(self, state, reward, done):
         self.samples.append([state, reward, done])
 
-    # for every episode calculate V values of visited states and return info
+    # for each episode, calculate discounted returns and return info
     def preprocess_visited_states(self):
         # state name and G for each state as appeared in the episode
         all_states = []
@@ -103,7 +103,7 @@ class MCAgent:
         return next_state
 
     # to be called in a main loop
-    def mainloop(self, env):
+    def mainloop(self, env, verbose=False):
         for episode in range(1000):
             state = env.reset()
             action = self.get_action(state)
@@ -120,11 +120,11 @@ class MCAgent:
 
                 # at the end of each episode, update the v function table
                 if done:
-                    print("episode : ", episode, "\t[3, 2]: ", round(self.value_table["[3, 2]"].V, 2),
-                          " [2, 3]:", round(self.value_table["[2, 3]"].V, 2), " [2, 2]:",
-                          round(self.value_table["[2, 2]"].V, 2),
-                          "\tepsilon: ", round(self.epsilon, 2))
+                    if(verbose):
+                        print("episode : ", episode, "\t[3, 2]: ", round(self.value_table["[3, 2]"].V, 2),
+                              "\t[2, 3]:", round(self.value_table["[2, 3]"].V, 2),
+                              "\t[2, 2]:", round(self.value_table["[2, 2]"].V, 2),
+                              "\t\tepsilon: ", round(self.epsilon, 2))
                     self.mc()
                     self.samples.clear()
                     break
-
