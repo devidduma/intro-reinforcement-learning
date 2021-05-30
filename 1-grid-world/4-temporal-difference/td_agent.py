@@ -25,7 +25,7 @@ class TDAgent:
         self.decaying_epsilon_mul_factor = 0.2
         self.epsilon = None
         self.tuple = None
-        self.learning_rate = 0.4
+        self.learning_rate = 1
         self.value_table = defaultdict(float)
 
     # append sample to memory(state, reward, done)
@@ -143,6 +143,8 @@ if __name__ == "__main__":
                 # ----
 
                 agent.decaying_epsilon_counter = agent.decaying_epsilon_counter + 1
+                # decaying learning rate
+                agent.learning_rate = 1 / (episode + 2)
 
                 print("episode : ", episode, "\t[3, 2]: ", round(agent.value_table["[3, 2]"], 2),
                       " [2, 3]:", round(agent.value_table["[2, 3]"], 2), " [2, 2]:", round(agent.value_table["[2, 2]"], 2),
