@@ -8,7 +8,7 @@ class EVMCAgent(MCAgent):
 
     # for every episode, agent updates q function of visited state action pairs
     def mc(self):
-        all_state_actions = super(EVMCAgent, self).preprocess_visited_states()
+        all_state_actions = super(EVMCAgent, self).preprocess_visited_state_actions()
         for state_action in all_state_actions:
                 self.update_global_q_value_table(state_action[0], state_action[1])
 

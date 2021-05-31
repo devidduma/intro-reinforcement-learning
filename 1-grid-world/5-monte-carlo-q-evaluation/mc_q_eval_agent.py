@@ -5,10 +5,11 @@ from environment import Env
 
 
 class VisitStateAction:
-    def __init__(self, total_G = 0, N = 0, Q = 0):
+    def __init__(self, total_G=0, N=0, Q=0):
         self.total_G = total_G
         self.N = N
         self.Q = Q
+
 
 # Monte Carlo Agent which learns every episodes from the sample
 class MCAgent:
@@ -18,7 +19,8 @@ class MCAgent:
         self.actions = actions
         self.discount_factor = 0.9
         self.decaying_epsilon_counter = 1
-        self.decaying_epsilon_mul_factor = 0.2
+        self.decaying_epsilon_mul_factor = 0.05
+        self.epsilon = None
         self.samples = []
         self.q_value_table = defaultdict(VisitStateAction)
 
@@ -27,7 +29,7 @@ class MCAgent:
         self.samples.append([state, action, reward, done])
 
     # for each episode, calculate discounted returns and return info
-    def preprocess_visited_states(self):
+    def preprocess_visited_state_actions(self):
         # state action name and G for each state as appeared in the episode
         all_states = []
         G = 0
@@ -50,12 +52,11 @@ class MCAgent:
     def update_global_q_value_table(self, state_action_name, G_t):
         pass
 
-
     # get action for the state according to the q function table
     # agent pick action of epsilon-greedy policy
     def get_action(self, state):
-        epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
-        if np.random.rand() < epsilon:
+        self.epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+        if np.random.rand() < self.epsilon:
             # take random action
             action = np.random.choice(self.actions)
         else:
@@ -108,8 +109,5 @@ class MCAgent:
                     self.samples.clear()
 
                     if verbose:
-                        print("episode : ", episode)
-                        for state_action in self.q_value_table:
-                            print("SA: ", state_action, " N: ", self.q_value_table[state_action].N, " Q: ",
-                                  self.q_value_table[state_action].Q)
+                        print("episode : ", episode, "\tepsilon: ", self.epsilon)
                     break

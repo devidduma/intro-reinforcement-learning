@@ -2,13 +2,13 @@ from mc_q_eval_agent import MCAgent, VisitStateAction
 from environment import Env
 
 
-class FVMCAgent(MCAgent):
+class IMCAgent(MCAgent):
     def __init__(self, actions):
-        super(FVMCAgent, self).__init__(actions)
+        super(IMCAgent, self).__init__(actions)
 
     # for every episode, agent updates q function of visited state action pairs
     def mc(self):
-        all_state_actions = super(FVMCAgent, self).preprocess_visited_states()
+        all_state_actions = super(IMCAgent, self).preprocess_visited_state_actions()
         for state_action in all_state_actions:
             self.update_global_q_value_table(state_action[0], state_action[1])
 
@@ -28,5 +28,5 @@ class FVMCAgent(MCAgent):
 # main loop
 if __name__ == "__main__":
     env = Env()
-    agent = FVMCAgent(actions=list(range(env.n_actions)))
-    agent.mainloop(env, verbose=True)
+    agent = IMCAgent(actions=list(range(env.n_actions)))
+    agent.mainloop(env, verbose=False)

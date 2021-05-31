@@ -8,7 +8,7 @@ class FVMCAgent(MCAgent):
 
     # for every episode, agent updates q function of visited state action pairs
     def mc(self):
-        all_state_actions = super(FVMCAgent, self).preprocess_visited_states()
+        all_state_actions = super(FVMCAgent, self).preprocess_visited_state_actions()
         visit_state_action = []
         for state_action in all_state_actions:
             if state_action[0] not in visit_state_action:
@@ -32,4 +32,4 @@ class FVMCAgent(MCAgent):
 if __name__ == "__main__":
     env = Env()
     agent = FVMCAgent(actions=list(range(env.n_actions)))
-    agent.mainloop(env, verbose=False)
+    agent.mainloop(env, verbose=True)
