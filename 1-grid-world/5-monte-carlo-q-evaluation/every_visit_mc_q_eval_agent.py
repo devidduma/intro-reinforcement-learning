@@ -1,4 +1,4 @@
-from mc_q_eval_agent import MCAgent
+from mc_q_eval_agent import MCAgent, VisitStateAction
 from environment import Env
 
 
@@ -7,49 +7,26 @@ class EVMCAgent(MCAgent):
         super(EVMCAgent, self).__init__(actions)
 
     # for every episode, agent updates q function of visited state action pairs
-    def update(self):
-        all_state_actions = super(EVMCAgent, self).update()
-        self.every_visit_mc(all_state_actions)
-
-    def every_visit_mc(self, all_state_actions):
+    def mc(self):
+        all_state_actions = super(EVMCAgent, self).preprocess_visited_states()
         for state_action in all_state_actions:
                 self.update_global_q_value_table(state_action[0], state_action[1])
 
-
+    # update visited states for first visit or every visit MC
+    def update_global_q_value_table(self, state_action_name, G_t):
+        updated = False
+        if state_action_name in self.q_value_table:
+            state_action = self.q_value_table[state_action_name]
+            state_action.total_G = state_action.total_G + G_t
+            state_action.N = state_action.N + 1
+            state_action.Q = state_action.total_G / state_action.N
+            updated = True
+        if not updated:
+            self.q_value_table[state_action_name] = VisitStateAction(total_G=G_t, N=1, Q=G_t)
 
 
 # main loop
 if __name__ == "__main__":
     env = Env()
     agent = EVMCAgent(actions=list(range(env.n_actions)))
-
-    for episode in range(1000):
-        state = env.reset()
-        action = agent.get_action(state)
-
-
-        while True:
-            env.render()
-
-            # forward to next state. reward is number and done is boolean
-            next_state, reward, done = env.step(action)
-
-            agent.save_sample(state, action, reward, done)
-
-            # update state
-            state = next_state
-            # get next action
-            action = agent.get_action(next_state)
-
-
-            # at the end of each episode, update the q function table
-            if done:
-                print("episode : ", episode)
-                agent.update()
-                agent.samples.clear()
-
-                """
-                for state_action in agent.q_value_table:
-                    print("SA: ",state_action, " N: ", agent.q_value_table[state_action].N, " Q: ", agent.q_value_table[state_action].Q)
-                """
-                break
+    agent.mainloop(env, verbose=False)

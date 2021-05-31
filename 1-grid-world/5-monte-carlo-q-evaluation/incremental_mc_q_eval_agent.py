@@ -1,63 +1,32 @@
 from mc_q_eval_agent import MCAgent, VisitStateAction
 from environment import Env
 
-class FVMCAgent (MCAgent):
+
+class FVMCAgent(MCAgent):
     def __init__(self, actions):
         super(FVMCAgent, self).__init__(actions)
 
     # for every episode, agent updates q function of visited state action pairs
-    def update(self):
-        all_state_actions = super(FVMCAgent, self).update()
-        self.incremental_mc(all_state_actions)
-
-    def incremental_mc(self, all_state_actions):
+    def mc(self):
+        all_state_actions = super(FVMCAgent, self).preprocess_visited_states()
         for state_action in all_state_actions:
             self.update_global_q_value_table(state_action[0], state_action[1])
 
     # redefined update visited states for incremental MC
-    def update_global_visit_state(self, state_action_name, G_t):
+    def update_global_q_value_table(self, state_action_name, G_t):
         updated = False
         if state_action_name in self.q_value_table:
-            state = self.q_value_table[state_action_name]
-            state.N = state.N + 1
-            learning_rate = 1.5 * 1 / state.N
-            state.Q = state.Q + learning_rate * (G_t - state.Q)
+            state_action = self.q_value_table[state_action_name]
+            state_action.N = state_action.N + 1
+            learning_rate = 0.5 * 1 / state_action.N
+            state_action.Q = state_action.Q + learning_rate * (G_t - state_action.Q)
             updated = True
         if not updated:
             self.q_value_table[state_action_name] = VisitStateAction(total_G=G_t, N=1, Q=G_t)
+
 
 # main loop
 if __name__ == "__main__":
     env = Env()
     agent = FVMCAgent(actions=list(range(env.n_actions)))
-
-    for episode in range(1000):
-        state = env.reset()
-        action = agent.get_action(state)
-
-
-        while True:
-            env.render()
-
-            # forward to next state. reward is number and done is boolean
-            next_state, reward, done = env.step(action)
-
-            agent.save_sample(state, action, reward, done)
-
-            # update state
-            state = next_state
-            # get next action
-            action = agent.get_action(next_state)
-
-
-            # at the end of each episode, update the q function table
-            if done:
-                print("episode : ", episode)
-                agent.update()
-                agent.samples.clear()
-
-                """
-                for state_action in agent.q_value_table:
-                    print("SA: ",state_action, " N: ", agent.q_value_table[state_action].N, " Q: ", agent.q_value_table[state_action].Q)
-                """
-                break
+    agent.mainloop(env, verbose=True)

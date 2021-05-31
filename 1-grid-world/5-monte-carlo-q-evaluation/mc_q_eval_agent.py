@@ -26,8 +26,8 @@ class MCAgent:
     def save_sample(self, state, action, reward, done):
         self.samples.append([state, action, reward, done])
 
-    # for every episode, agent updates q function of visited state action pairs
-    def update(self):
+    # for each episode, calculate discounted returns and return info
+    def preprocess_visited_states(self):
         # state action name and G for each state as appeared in the episode
         all_states = []
         G = 0
@@ -42,17 +42,13 @@ class MCAgent:
 
         return all_states
 
+    # to be defined in children classes
+    def mc(self):
+        pass
+
     # update visited states for first visit or every visit MC
     def update_global_q_value_table(self, state_action_name, G_t):
-        updated = False
-        if state_action_name in self.q_value_table:
-            state_action = self.q_value_table[state_action_name]
-            state_action.total_G = state_action.total_G + G_t
-            state_action.N = state_action.N + 1
-            state_action.Q = state_action.total_G / state_action.N
-            updated = True
-        if not updated:
-            self.q_value_table[state_action_name] = VisitStateAction(total_G=G_t, N=1, Q=G_t)
+        pass
 
 
     # get action for the state according to the q function table
@@ -84,7 +80,36 @@ class MCAgent:
 
     # get the possible next states
     def possible_Q_values(self, state):
-
         Q_values = [self.q_value_table[str([state, x])].Q for x in range(4)]
-
         return Q_values
+
+    # to be called in a main loop
+    def mainloop(self, env, verbose=False):
+        for episode in range(1000):
+            state = env.reset()
+            action = self.get_action(state)
+
+            while True:
+                env.render()
+
+                # forward to next state. reward is number and done is boolean
+                next_state, reward, done = env.step(action)
+
+                self.save_sample(state, action, reward, done)
+
+                # update state
+                state = next_state
+                # get next action
+                action = self.get_action(next_state)
+
+                # at the end of each episode, update the q function table
+                if done:
+                    self.mc()
+                    self.samples.clear()
+
+                    if verbose:
+                        print("episode : ", episode)
+                        for state_action in self.q_value_table:
+                            print("SA: ", state_action, " N: ", self.q_value_table[state_action].N, " Q: ",
+                                  self.q_value_table[state_action].Q)
+                    break
