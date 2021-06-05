@@ -54,7 +54,7 @@ class MCAgent:
     # get action for the state according to the v function table
     # agent pick action of epsilon-greedy policy
     def get_action(self, state):
-        self.epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+        self.update_epsilon()
         if np.random.rand() < self.epsilon:
             # take random action
             action = np.random.choice(self.actions)
@@ -63,6 +63,9 @@ class MCAgent:
             next_state = self.possible_next_state(state)
             action = self.arg_max(next_state)
         return int(action)
+
+    def update_epsilon(self):
+        self.epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
 
     # compute arg_max if multiple candidates exit, pick one randomly
     @staticmethod
