@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import random
 from collections import defaultdict
@@ -53,7 +55,7 @@ class TDAgent:
     # get action for the state according to the v function table
     # agent pick action of epsilon-greedy policy
     def get_action(self, state):
-        self.epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+        self.update_epsilon()
         if np.random.rand() < self.epsilon:
             # take random action
             action = np.random.choice(self.actions)
@@ -62,6 +64,16 @@ class TDAgent:
             next_state = self.possible_next_state(state)
             action = self.arg_max(next_state)
         return int(action)
+
+    # epsilon-greedy policy
+    def update_epsilon(self):
+        self.epsilon = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+
+    # decaying learning rate satisfying Robbins-Munro sequence
+    def update_learning_rate(self):
+        self.learning_rate = 1 / (self.decaying_epsilon_counter * self.decaying_epsilon_mul_factor)
+        if self.learning_rate > 1:
+            self.learning_rate = 1
 
     # compute arg_max if multiple candidates exit, pick one randomly
     @staticmethod
@@ -101,52 +113,63 @@ class TDAgent:
 
         return next_state
 
+    def mainloop(self, env, verbose = False):
+
+        for episode in range(1000):
+            state = env.reset()
+
+            # update epsilon and get next action
+            action = self.get_action(state)
+            reward = 0
+
+            while True:
+                env.render()
+
+                # forward to next state. reward is number and done is boolean
+                next_state, next_reward, done = env.step(action)
+
+                # update epsilon and get next action
+                next_action = self.get_action(next_state)
+
+                # save only tuple
+                self.save_tuple(Tuple(state, action, reward, next_state, next_action, False))
+                # update v values immediately
+                self.update()
+                # clear tuple
+                self.tuple = None
+
+                state = next_state
+                action = next_action
+                reward = next_reward
+
+                # at the end of each episode, print episode info
+                if done:
+                    # ---- Terminal State
+                    # save only tuple
+                    self.save_tuple(Tuple(state, action, reward, state, action, True))
+                    # update v values immediately
+                    self.update()
+                    # clear tuple
+                    self.tuple = None
+                    # ----
+
+                    self.decaying_epsilon_counter = self.decaying_epsilon_counter + 1
+                    # decaying learning rate satisfying Robbins-Munro sequence
+                    self.update_learning_rate()
+
+                    if verbose:
+                        print("episode: ", episode,
+                              "\t[3, 2]: ", round(self.value_table["[3, 2]"], 2),
+                              "\t[2, 3]:", round(self.value_table["[2, 3]"], 2),
+                              "\t[2, 2]:", round(self.value_table["[2, 2]"], 2),
+                              "\tepsilon: ", round(self.epsilon, 2),
+                              "\tlearning rate: ", round(self.learning_rate, 2)
+                              )
+                    break
+
 
 # main loop
 if __name__ == "__main__":
     env = Env()
     agent = TDAgent(actions=list(range(env.n_actions)))
-
-    for episode in range(1000):
-        state = env.reset()
-        action = agent.get_action(state)
-        reward = 0
-
-        while True:
-            env.render()
-
-            # forward to next state. reward is number and done is boolean
-            next_state, next_reward, done = env.step(action)
-            # get next action
-            next_action = agent.get_action(next_state)
-
-            # save only tuple
-            agent.save_tuple(Tuple(state, action, reward, next_state, next_action, False))
-            # update v values immediately
-            agent.update()
-            # clear tuple
-            agent.tuple = None
-
-            state = next_state
-            action = next_action
-            reward = next_reward
-
-            # at the end of each episode, print episode info
-            if done:
-                # ---- Terminal State
-                # save only tuple
-                agent.save_tuple(Tuple(state, action, reward, state, action, True))
-                # update v values immediately
-                agent.update()
-                # clear tuple
-                agent.tuple = None
-                # ----
-
-                agent.decaying_epsilon_counter = agent.decaying_epsilon_counter + 1
-                # decaying learning rate
-                agent.learning_rate = 1 / (episode + 2)
-
-                print("episode : ", episode, "\t[3, 2]: ", round(agent.value_table["[3, 2]"], 2),
-                      " [2, 3]:", round(agent.value_table["[2, 3]"], 2), " [2, 2]:", round(agent.value_table["[2, 2]"], 2),
-                      "\tepsilon: ", round(agent.epsilon, 2))
-                break
+    agent.mainloop(env, verbose=True)
