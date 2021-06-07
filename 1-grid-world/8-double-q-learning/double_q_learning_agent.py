@@ -7,7 +7,7 @@ class QLearningAgent:
     def __init__(self, actions):
         # actions = [0, 1, 2, 3]
         self.actions = actions
-        self.learning_rate = 0.01
+        self.learning_rate = 0.4
         self.discount_factor = 0.9
         self.epsilon = 0.1
         self.qA_table = defaultdict(lambda: [0.0, 0.0, 0.0, 0.0])
@@ -54,27 +54,34 @@ class QLearningAgent:
                 max_index_list.append(index)
         return random.choice(max_index_list)
 
+    def mainloop(self, env, verbose=False):
+        for episode in range(1000):
+            state = env.reset()
+
+            while True:
+                env.render()
+
+                # take action and proceed one step in the environment
+                action = self.get_action(str(state))
+                next_state, reward, done = env.step(action)
+
+                # with sample <s,a,r,s'>, agent learns new q function
+                self.learn(str(state), action, reward, str(next_state))
+
+                state = next_state
+                env.print_value_all(self.qA_table, self.qB_table)
+
+                # if episode ends, then break
+                if done:
+                    if verbose:
+                        print("episode: ", episode,
+                              "\tepsilon: ", round(self.epsilon, 2),
+                              "\tlearning rate: ", round(self.learning_rate, 2)
+                              )
+                    break
+
+
 if __name__ == "__main__":
     env = Env()
     agent = QLearningAgent(actions=list(range(env.n_actions)))
-
-    for episode in range(1000):
-        state = env.reset()
-
-        while True:
-            env.render()
-
-            # take action and proceed one step in the environment
-            action = agent.get_action(str(state))
-            next_state, reward, done = env.step(action)
-
-            # with sample <s,a,r,s'>, agent learns new q function
-            agent.learn(str(state), action, reward, str(next_state))
-
-            state = next_state
-            env.print_value_all(agent.qA_table, agent.qB_table)
-
-            # if episode ends, then break
-            if done:
-                print("episode : ", episode)
-                break
+    agent.mainloop(env, verbose=True)
