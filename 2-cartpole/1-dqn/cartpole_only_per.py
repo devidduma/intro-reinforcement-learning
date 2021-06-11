@@ -45,7 +45,7 @@ class DQNAgent:
         self.update_target_model()
 
         if self.load_model:
-            self.model.load_weights("./save_model/cartpole_dqn_trained.h5")
+            self.model.load_weights("./save_model/cartpole_dqn.h5")
 
     # approximate Q function using Neural Network
     # state is input and Q Value of each action is output of network
@@ -213,12 +213,12 @@ if __name__ == "__main__":
                 scores.append(score)
                 episodes.append(e)
                 pylab.plot(episodes, scores, 'b')
-                pylab.savefig("./save_graph/cartpole_dqn.png")
+                pylab.savefig("./save_graph/cartpole_dqn2.png")
                 print("episode:", e, "  score:", score, "  memory length:",
                       step if step <= agent.memory_size else agent.memory_size, "  epsilon:", agent.epsilon)
 
                 # if the mean of scores of last 10 episode is bigger than 490
                 # stop training
                 if np.mean(scores[-min(10, len(scores)):]) > 490:
-                    agent.model.save_weights("./save_model/cartpole_dqn.h5")
+                    agent.model.save_weights("./save_model/cartpole_dqn2.h5")
                     sys.exit()

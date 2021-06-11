@@ -165,7 +165,7 @@ if __name__ == "__main__":
                 scores.append(score)
                 episodes.append(e)
                 pylab.plot(episodes, scores, 'b')
-                pylab.savefig("./save_graph/cartpole_dqn.png")
+                pylab.savefig("./save_graph/cartpole_dqn2.png")
                 print("episode:", e, "  score:", score, "  memory length:",
                       len(agent.memory), "  epsilon:", agent.epsilon)
 
@@ -176,4 +176,4 @@ if __name__ == "__main__":
 
         # save the model
         if e % 50 == 0:
-            agent.model.save_weights("./save_model/cartpole_dqn.h5")
+            agent.model.save_weights("./save_model/cartpole_dqn2.h5")

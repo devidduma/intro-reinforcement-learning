@@ -30,7 +30,7 @@ class DeepSARSAgent:
 
         if self.load_model:
             self.epsilon = 0.05
-            self.model.load_weights('./save_model/deep_sarsa_trained.h5')
+            self.model.load_weights('./save_model/deep_sarsa.h5')
 
     # approximate Q function using Neural Network
     # state is input and Q Value of each action is output of network
@@ -109,9 +109,9 @@ if __name__ == "__main__":
                 scores.append(score)
                 episodes.append(e)
                 pylab.plot(episodes, scores, 'b')
-                pylab.savefig("./save_graph/deep_sarsa_.png")
+                pylab.savefig("./save_graph/deep_sarsa2.png")
                 print("episode:", e, "  score:", score, "global_step",
                       global_step, "  epsilon:", agent.epsilon)
 
         if e % 100 == 0:
-            agent.model.save_weights("./save_model/deep_sarsa.h5")
+            agent.model.save_weights("./save_model/deep_sarsa2.h5")

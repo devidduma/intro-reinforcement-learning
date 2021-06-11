@@ -33,7 +33,7 @@ class DeepMCQEvalAgent:
 
         if self.load_model:
             self.epsilon = 0.05
-            self.model.load_weights('./save_model/deep_mc_trained.h5')
+            self.model.load_weights('./save_model/deep_mc_q_eval.h5')
 
     # append sample to memory(state, reward, done)
     def save_sample(self, state, action, reward, done):
@@ -151,7 +151,7 @@ if __name__ == "__main__":
                 scores.append(score)
                 episodes.append(e)
                 pylab.plot(episodes, scores, 'b')
-                pylab.savefig("./save_graph/deep_mc_q_eval.png")
+                pylab.savefig("./save_graph/deep_mc_q_eval2.png")
 
                 # last tuple
                 action = agent.get_action(state)
@@ -168,4 +168,4 @@ if __name__ == "__main__":
                       )
 
         if e % 100 == 0:
-            agent.model.save_weights("./save_model/deep_mc_q_eval.h5")
+            agent.model.save_weights("./save_model/deep_mc_q_eval2.h5")
