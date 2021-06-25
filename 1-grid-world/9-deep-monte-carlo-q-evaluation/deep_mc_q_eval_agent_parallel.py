@@ -38,7 +38,7 @@ class DeepMCQEvalAgent:
 
         if self.load_model:
             self.epsilon = 0.05
-            self.model.load_weights('./save_model/deep_mc_q_eval.h5')
+            self.model.load_weights('./save_model/deep_mc_q_eval_parallel.h5')
 
     # approximate Q function using Neural Network
     # state is input and Q Value of each action is output of network
