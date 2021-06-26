@@ -1,5 +1,0 @@
-TODO
-Batch Monte Carlo
-Importance Sampling
-Deep Monte Carlo, Deep TD
-CNN versions of Deep Methods

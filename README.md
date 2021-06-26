@@ -1,57 +1,37 @@
-Reinforcement Learning algorithms as presented on the [CS234 Course](http://web.stanford.edu/class/cs234/CS234Win2019/index.html) by Prof. Emma Brunskill. ([Lecture videos](https://www.youtube.com/playlist?list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u))
-Forked from rlcode/reinforcement-learning
+## Introduction to Reinforcement Learning
 
-This repo provides easy-to-read code examples and will cover every topic and algorithm presented on the CS234 course. One file for each algorithm.
+### Bachelor Thesis
 
-Currently under development.
+This repository is based on [rlcode/reinforcement-learning](https://github.com/rlcode/reinforcement-learning).
+They did an amazing job in providing simple and clean examples of reinforcement learning algorithms.
+It helped me a lot in applying theory to practice.
 
-## Dependencies
-1. Python
-2. Tensorflow
-3. Keras
-4. numpy
-5. pandas
-6. matplot
-7. pillow
-8. Skimage
-9. h5py
+This repository contains 12 reinforcement learning topics with a total of 19 different algorithm implementations.
+
+Forked work:
+ - 8 algorithm implementations have been forked from the parent repository. I did some refractoring and hyperparameter tuning.
+
+Work done by me:
+ - 4 new topics and 10 algorithm implementations, including Monte Carlo variations.
+ - 1 special parallel programming implementation of deep Monte Carlo on policy Q evaluation.
+ - 12 Jupyter Notebook documentations for each topic, in order to combine theory with code.
 
 ### Install Requirements
 ```
 pip install -r requirements.txt
 ```
 
-## Table of Contents
+### Table of Contents
 
-**Grid World** - Mastering the basics of reinforcement learning in the simplified world called "Grid World"
-
-- [Policy Iteration](./1-grid-world/1-policy-iteration)
-- [Value Iteration](./1-grid-world/2-value-iteration)
-- [Monte Carlo](./1-grid-world/3-monte-carlo)
-    - [First Visit MC](./1-grid-world/3-monte-carlo/first_visit_mc_agent.py), [Every Visit MC](./1-grid-world/3-monte-carlo/every_visit_mc_agent.py), [Incremental MC](./1-grid-world/3-monte-carlo/incremental_mc_agent.py)
-- [Temporal Difference](./1-grid-world/4-temporal-difference)
-- [Monte Carlo Q Evaluation](./1-grid-world/5-monte-carlo-q-evaluation)
-    - [First Visit MCQE](./1-grid-world/5-monte-carlo-q-evaluation/first_visit_mc_q_eval_agent.py), [Every Visit MCQE](./1-grid-world/5-monte-carlo-q-evaluation/every_visit_mc_q_eval_agent.py), [Incremental MCQE](./1-grid-world/5-monte-carlo-q-evaluation/incremental_mc_q_eval_agent.py)
-- [SARSA](1-grid-world/6-sarsa)
-- [Q-Learning](1-grid-world/7-q-learning)
-- [Double Q-Learning](1-grid-world/8-double-q-learning)
-- [Deep MC Q Evaluation (Batch)](1-grid-world/9-deep-monte-carlo-q-evaluation)
-- [Deep SARSA](1-grid-world/10-deep-sarsa)
-- [REINFORCE](1-grid-world/11-reinforce)
-
-**CartPole** - Applying deep reinforcement learning on basic Cartpole game.
-
-- [Deep Q Network](./2-cartpole/1-dqn)
-- [Double Deep Q Network](./2-cartpole/2-double-dqn)
-- [Policy Gradient](./2-cartpole/3-reinforce)
-- [Actor Critic (A2C)](./2-cartpole/4-actor-critic)
-- [Asynchronous Advantage Actor Critic (A3C)](./2-cartpole/5-a3c)
-
-**Atari** - Mastering Atari games with Deep Reinforcement Learning
-
-- **Breakout** - [DQN](./3-atari/1-breakout/breakout_dqn.py), [DDQN](./3-atari/1-breakout/breakout_ddqn.py), [Dueling DDQN](./3-atari/1-breakout/breakout_ddqn.py), [A3C](./3-atari/1-breakout/breakout_a3c.py)
-- **Pong** - [Policy Gradient](./3-atari/2-pong/pong_reinforce.py)
-
-**OpenAI GYM** - [WIP]
-
-- Mountain Car - [DQN](./4-gym/1-mountaincar)
+- [Policy Iteration](1-policy-iteration/policy_iteration.ipynb)
+- [Value Iteration](2-value-iteration/value_iteration.ipynb)
+- [Monte Carlo](3-monte-carlo/mc_agent.ipynb)
+- [Temporal Difference](4-temporal-difference/td_agent.ipynb)
+- [Monte Carlo Q-Evaluation](5-monte-carlo-q-evaluation/mc_q_eval_agent.ipynb)
+- [SARSA](6-sarsa/sarsa_agent.ipynb)
+- [Q-Learning](7-q-learning/q_learning_agent.ipynb)
+- [Double Q-Learning](8-double-q-learning/double_q_learning_agent.ipynb)
+- [Deep Monte Carlo Q-Evaluation](9-deep-monte-carlo-q-evaluation/deep_mc_q_eval_agent.ipynb)
+- [Deep SARSA](10-deep-sarsa/deep_sarsa_agent.ipynb)
+- [Deep Q-Network](11-dqn/cartpole_dqn.ipynb)
+- [Double Deep Q-Network](12-double-dqn)
