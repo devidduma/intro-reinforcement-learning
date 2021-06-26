@@ -1,6 +1,6 @@
-## Introduction to Reinforcement Learning
+## Bachelor Project
 
-### Bachelor Thesis
+### Introduction to Reinforcement Learning
 
 This repository is based on [rlcode/reinforcement-learning](https://github.com/rlcode/reinforcement-learning).
 They did an amazing job in providing simple and clean examples of reinforcement learning algorithms.
@@ -9,12 +9,12 @@ It helped me a lot in applying theory to practice.
 This repository contains 12 reinforcement learning topics with a total of 19 different algorithm implementations.
 
 Forked work:
- - 8 algorithm implementations have been forked from the parent repository. I did some refractoring and hyperparameter tuning.
+ - *8 implementations* have been forked from the parent repository. I did some refractoring and hyperparameter tuning.
 
 Work done by me:
- - 4 new topics and 10 algorithm implementations, including Monte Carlo variations.
- - 1 special parallel programming implementation of deep Monte Carlo on policy Q evaluation.
- - 12 Jupyter Notebook documentations for each topic, in order to combine theory with code.
+ - **4 new topics** and **10 implementations**, including Monte Carlo variations.
+ - **1 special** parallel programming implementation of deep Monte Carlo on policy Q evaluation.
+ - **12 Jupyter Notebook** documentations for each topic, in order to combine theory with code.
 
 ### Install Requirements
 ```
