@@ -27,6 +27,7 @@ class DQNAgent:
         # These are hyper parameters for the DQN
         self.discount_factor = 0.99
         self.learning_rate = 0.001
+        self.learning_rate_decay = 0.0
         self.epsilon = 1.0
         self.epsilon_decay = 0.999
         self.epsilon_min = 0.01
@@ -57,7 +58,7 @@ class DQNAgent:
         model.add(Dense(self.action_size, activation='linear',
                         kernel_initializer='he_uniform'))
         model.summary()
-        model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
+        model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate, decay=self.learning_rate_decay))
         return model
 
     # after some time interval update the target model to be same with model

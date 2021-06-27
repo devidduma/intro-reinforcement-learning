@@ -18,7 +18,7 @@ class DoubleDQNAgent:
     def __init__(self, state_size, action_size):
         # if you want to see Cartpole learning, then change to True
         self.render = False
-        self.load_model = True
+        self.load_model = False
         # get size of state and action
         self.state_size = state_size
         self.action_size = action_size
@@ -26,6 +26,7 @@ class DoubleDQNAgent:
         # these is hyper parameters for the Double DQN
         self.discount_factor = 0.99
         self.learning_rate = 0.001
+        self.learning_rate_decay = 0.0
         self.epsilon = 1.0
         self.epsilon_decay = 0.999
         self.epsilon_min = 0.01
@@ -56,7 +57,7 @@ class DoubleDQNAgent:
         model.add(Dense(self.action_size, activation='linear',
                         kernel_initializer='he_uniform'))
         model.summary()
-        model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate))
+        model.compile(loss='mse', optimizer=Adam(lr=self.learning_rate, decay=self.learning_rate_decay))
         return model
 
     # after some time interval update the target model to be same with model
@@ -168,7 +169,7 @@ if __name__ == "__main__":
                 scores.append(score)
                 episodes.append(e)
                 pylab.plot(episodes, scores, 'b')
-                pylab.savefig("./save_graph/cartpole_ddqn.png")
+                pylab.savefig("./save_graph/cartpole_ddqn2.png")
                 print("episode:", e, "  score:", score, "  memory length:",
                       len(agent.memory), "  epsilon:", agent.epsilon)
 
@@ -179,4 +180,4 @@ if __name__ == "__main__":
 
         # save the model
         if e % 50 == 0:
-            agent.model.save_weights("./save_model/cartpole_ddqn.h5")
+            agent.model.save_weights("./save_model/cartpole_ddqn2.h5")
