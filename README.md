@@ -34,4 +34,4 @@ pip install -r requirements.txt
 - [Deep Monte Carlo Q-Evaluation](9-deep-monte-carlo-q-evaluation/deep_mc_q_eval_agent.ipynb)
 - [Deep SARSA](10-deep-sarsa/deep_sarsa_agent.ipynb)
 - [Deep Q-Network](11-dqn/cartpole_dqn.ipynb)
-- [Double Deep Q-Network](12-double-dqn)
+- [Double Deep Q-Network](12-double-dqn/cartpole_ddqn.ipynb)
